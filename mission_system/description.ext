@@ -1,8 +1,0 @@
-#include "misys\factions.hpp"
-
-class cfgFunctions {
-	class mu {
-		#include "misys\functions.hpp"
-		
-		};
-;}
