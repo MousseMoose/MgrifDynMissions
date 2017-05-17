@@ -6,11 +6,11 @@
 #define MISYS_ENEMIES 	5
 #define MISYS_VEHICLES 	6
 #define MISYS_BASESKILL 0.25
-#define MU_FACTION_TRAIT_S(FAC,TRAIT) getText MU_FACTION_TRAIT(FAC,TRAIT)
-#define MU_FACTION_TRAIT_N(FAC,TRAIT) getNumber MU_FACTION_TRAIT(FAC,TRAIT)
-#define MU_FACTION_TRAIT_A(FAC,TRAIT) getArray MU_FACTION_TRAIT(FAC,TRAIT)
-#define MU_FACTION_TRAIT(FAC,TRAIT) (MU_CONFIGROOT >> "cfgMuFactions" >> FAC >> TRAIT)
-#define MU_CONFIGROOT missionconfigFile
+#define MGRIF_FACTION_TRAIT_S(FAC,TRAIT) getText MGRIF_FACTION_TRAIT(FAC,TRAIT)
+#define MGRIF_FACTION_TRAIT_N(FAC,TRAIT) getNumber MGRIF_FACTION_TRAIT(FAC,TRAIT)
+#define MGRIF_FACTION_TRAIT_A(FAC,TRAIT) getArray MGRIF_FACTION_TRAIT(FAC,TRAIT)
+#define MGRIF_FACTION_TRAIT(FAC,TRAIT) (MGRIF_CONFIGROOT >> "cfgMgrifFactions" >> FAC >> TRAIT)
+#define MGRIF_CONFIGROOT missionconfigFile
 
 
 //Load Mission data
@@ -31,6 +31,7 @@ _params = call compile preprocessfile format ["misys\missions\%1.sqf",_name];
 _meta = _params select MISYS_META;
 _watch 		= [];
 if(count (_params select MISYS_WATCH) > 0) then {
+	hint "doing stuff";
 	_watch 		= 		[_pos, _dir, _params select MISYS_WATCH] call bis_fnc_objectsMapper;
 };
 test1 = _watch;
@@ -50,7 +51,7 @@ if(count (_params select MISYS_STATIC) > 0) then {
     _static 	= 		[_pos, _dir, _params select MISYS_STATIC] call bis_fnc_objectsMapper;
 };
 
-
+//if (true) exitWith {};
 //Spawn sentries
 _watchGroup = createGroup OPFOR;
 {
@@ -76,7 +77,7 @@ _watchGroup = createGroup OPFOR;
       			_watchgroup,
      			_highest,
                 _faction
-                ] call mu_fnc_misys_createUnit;
+                ] call mgrif_fnc_misys_createUnit;
         [_unit] join _watchGroup;
         //_unit =  (units _watchGroup) select ((count units _watchGroup)-1);
         _unit setDir random 359;
@@ -94,7 +95,7 @@ _watchGroup = createGroup OPFOR;
       			_watchgroup,
      			_bpos select (round random ((count _bpos)-1)),
                 _faction
-                ] call mu_fnc_misys_createUnit;
+                ] call mgrif_fnc_misys_createUnit;
       [_unit] join _watchGroup;
      // _unit =  (units _watchGroup) select ((count units _watchGroup)-1);
       _unit setPos (_bpos select (round random ((count _bpos)-1)));
@@ -109,7 +110,7 @@ _watchGroup = createGroup OPFOR;
 //Spawn foot patrols
 _patrolGroups = [];
 
-_patrolCount = MU_FACTION_TRAIT_N("fia","patrolMaxCount");
+_patrolCount = MGRIF_FACTION_TRAIT_N(_faction,"patrolMaxCount");
 for "_i" from  1 to (round (_strength*(_patrolCount))) do {
     _patrolGroup = createGroup OPFOR;
     _patrolGroups pushBack _patrolGroup;
@@ -120,7 +121,7 @@ for "_i" from  1 to (round (_strength*(_patrolCount))) do {
       			_patrolGroup,
      			_safePos,
                 _faction
-                ] call mu_fnc_misys_createUnit;
+                ] call mgrif_fnc_misys_createUnit;
                 [_unit] join _patrolGroup;
                 
     };

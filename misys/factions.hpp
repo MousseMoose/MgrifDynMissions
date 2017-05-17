@@ -1,4 +1,4 @@
-class cfgMuFactions {
+class cfgMgrifFactions {
     class fia {
         
         unit = "B_G_Soldier_F";

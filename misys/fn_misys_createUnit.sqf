@@ -9,9 +9,9 @@ params ["_class","_group","_pos","_faction"];
 
 
 
-//_config = MUCONFIGROOT >> 'cfgMuFactions' >> _faction >> 'gear' >> _gear;
+//_config = MUCONFIGROOT >> 'cfgMgrifFactions' >> _faction >> 'gear' >> _gear;
 
-_unit = _group createUnit [getText ( MUCONFIGROOT >> 'cfgMuFactions' >> _faction >> 'unit') ,_pos,[],0,"NOTHING"];
+_unit = _group createUnit [getText ( MUCONFIGROOT >> 'cfgMgrifFactions' >> _faction >> 'unit') ,_pos,[],0,"NOTHING"];
 
 removeAllWeapons _unit;
 removeAllItems _unit;
@@ -24,7 +24,7 @@ removeGoggles _unit;
 
 //use scope visibility to make helper function to add gear
 _getEntry = {
-    selectRandom ([_faction,[] call  mu_fnc_misys_determineRarity, _this select 0] call mu_fnc_misys_getGearArr)
+    selectRandom ([_faction,[] call  mgrif_fnc_misys_determineRarity, _this select 0] call mgrif_fnc_misys_getGearArr)
     };
     
 _unit addUniform (["uniforms"] call _getEntry);
@@ -39,7 +39,7 @@ if(random 1 >0.6 ) then {
 };
 
 _wep = ["weaponsPrim"] call _getEntry;
-//if (isNil "_wep") then {hint format["(MUCONFIGROOT >> 'cfgMuFactions' >> %1 >> 'gear' >>%2 >> %3)",_faction,[] call  mu_fnc_misys_determineRarity, "weaponsPrim"]};
+//if (isNil "_wep") then {hint format["(MUCONFIGROOT >> 'cfgMgrifFactions' >> %1 >> 'gear' >>%2 >> %3)",_faction,[] call  mgrif_fnc_misys_determineRarity, "weaponsPrim"]};
 for "_i" from 3 to (3 + (round random 3)) do {
  _unit addMagazine selectRandom (getArray (configFile >> "cfgWeapons" >> _wep >> 'magazines'));
 };
@@ -65,7 +65,7 @@ if(random 1>0.75) then {
 };
 
 //Add items, minimum and possible extras
-_itemCount = ([_faction,[] call  mu_fnc_misys_determineRarity, 'itemCount'] call mu_fnc_misys_getGearArr);
+_itemCount = ([_faction,[] call  mgrif_fnc_misys_determineRarity, 'itemCount'] call mgrif_fnc_misys_getGearArr);
 for "_i" from 1 to ((_itemCount select 0) + (round random (_itemCount select 1))) do {
     _unit addItem (["items"] call _getEntry);
 };
@@ -75,7 +75,7 @@ _unit linkItem "itemRadio";
 _unit linkItem "itemMap";
 
 //Add gear/linked items. Slightly worse odds for adding gear items due to duplicates
-_gearCount = ([_faction,[] call  mu_fnc_misys_determineRarity, 'gearCount'] call mu_fnc_misys_getGearArr);
+_gearCount = ([_faction,[] call  mgrif_fnc_misys_determineRarity, 'gearCount'] call mgrif_fnc_misys_getGearArr);
 for "_i" from 1 to ((_gearCount select 0) + (round random (_gearCount select 1))) do {
     _unit linkItem (["gear"] call _getEntry);
 };
