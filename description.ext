@@ -1,8 +1,10 @@
 #include "misys\factions.hpp"
+#include "misys\compounds.hpp"
 
 class cfgFunctions {
 	class mgrif {
 		#include "misys\functions.hpp"
+		
 		
 		};
 ;}

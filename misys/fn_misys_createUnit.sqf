@@ -11,7 +11,7 @@ params ["_class","_group","_pos","_faction"];
 
 //_config = MUCONFIGROOT >> 'cfgMgrifFactions' >> _faction >> 'gear' >> _gear;
 
-_unit = _group createUnit [getText ( MUCONFIGROOT >> 'cfgMgrifFactions' >> _faction >> 'unit') ,_pos,[],0,"NOTHING"];
+_unit = _group createUnit [getText ( MUCONFIGROOT >> 'cfgMgrifFactions' >> _faction >> 'unit') ,_pos,[],0,"CAN_COLLIDE"];
 
 removeAllWeapons _unit;
 removeAllItems _unit;

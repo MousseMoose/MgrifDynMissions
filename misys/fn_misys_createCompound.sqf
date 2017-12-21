@@ -3,57 +3,61 @@
 #define MISYS_BUILDINGS 2
 #define MISYS_PROPS 	3
 #define MISYS_STATIC 	4
-#define MISYS_ENEMIES 	5
-#define MISYS_VEHICLES 	6
-#define MISYS_BASESKILL 0.25
+#define MISYS_COMPS 	5
+#define MGRIF_CONFIGROOT missionconfigFile
+
 #define MGRIF_FACTION_TRAIT_S(FAC,TRAIT) getText MGRIF_FACTION_TRAIT(FAC,TRAIT)
 #define MGRIF_FACTION_TRAIT_N(FAC,TRAIT) getNumber MGRIF_FACTION_TRAIT(FAC,TRAIT)
 #define MGRIF_FACTION_TRAIT_A(FAC,TRAIT) getArray MGRIF_FACTION_TRAIT(FAC,TRAIT)
 #define MGRIF_FACTION_TRAIT(FAC,TRAIT) (MGRIF_CONFIGROOT >> "cfgMgrifFactions" >> FAC >> TRAIT)
-#define MGRIF_CONFIGROOT missionconfigFile
 
 
-//Load Mission data
-private ["_name","_pos","_dir","_params"];
 params [
-			["_name",0],
-			["_pos",0],
-			["_dir",0],
-			["_faction",0],
-			["_type",0],
-			["_strength",0],
-			["_radius",75]
-		];
-			
+	["_name",0],
+	["_size",0],
+	["_pos",0],
+	["_dir",0]
+];
 
-_groups = [];
+
+
+
 //Load mission data
-_params = call compile preprocessfile format ["misys\missions\%1.sqf",_name];
-_meta = _params select MISYS_META;
-_watch 		= [];
-if(count (_params select MISYS_WATCH) > 0) then {
-	hint "doing stuff";
-	_watch 		= 		[_pos, _dir, _params select MISYS_WATCH] call bis_fnc_objectsMapper;
-};
-test1 = _watch;
+_file = getText(MGRIF_CONFIGROOT >> "CfgMisysCompounds" >> _size >> _name >> "file");
+_compound = [_file,_pos,_dir] call mgrif_fnc_misys_createComposition;
 
-_buildings  = [];
-if(count (_params select MISYS_BUILDINGS) > 0) then {
-	_buildings 	=		[_pos, _dir, _params select MISYS_BUILDINGS] call bis_fnc_objectsMapper;
+_components = getArray (MGRIF_CONFIGROOT >> "CfgMisysCompounds" >> _size >> _name >> "components");
+if(count (_components) > 0) then {
+	{
+		//select a random component of given Size and Type
+		_comp = (MGRIF_CONFIGROOT >> "CfgMisysCompoundComponents" >> (_x select 0) >> (_x select 1));
+		//select a random component of given size and type
+		_compFile = getText ((_comp select random ((count _comp)-1)) >> "file");
+		diag_log str _compound;
+		diag_log format ["Parameter 1 %1",_compFile];
+		diag_log format ["Parameter 2 %1",position ((_compound select MISYS_COMPS) select _forEachIndex)];
+		diag_log format ["Parameter 3 %1",getDir ((_compound select MISYS_COMPS) select _forEachIndex)];
+		_compObjs = [
+						_compFile,
+						position ((_compound select MISYS_COMPS) select _forEachIndex),
+						getDir ((_compound select MISYS_COMPS) select _forEachIndex)
+					] call mgrif_fnc_misys_createComposition;
+		{
+			//(_compound select _forEachIndex) append _x;
+		} foreach _compObjs;
+	} foreach _components;
+	
+	{deleteVehicle _x} foreach (_compound select MISYS_COMPS);
 };
 
-_props 		= [];
-if(count (_params select MISYS_PROPS) > 0) then {
-    _props		= 		[_pos, _dir, _params select MISYS_PROPS] call bis_fnc_objectsMapper;
-};
+//AI
+//------------------------------------------------------------------------------------------------------------
+//hardcode stuff for now
+_faction = "FIA";
+_strength = 1;
+_radius = 33;
 
-_static = [];
-if(count (_params select MISYS_STATIC) > 0) then {
-    _static 	= 		[_pos, _dir, _params select MISYS_STATIC] call bis_fnc_objectsMapper;
-};
 
-//if (true) exitWith {};
-//Spawn sentries
 _watchGroup = createGroup OPFOR;
 {
     
@@ -98,14 +102,16 @@ _watchGroup = createGroup OPFOR;
                 _faction
                 ] call mgrif_fnc_misys_createUnit;
       [_unit] join _watchGroup;
+	  
      // _unit =  (units _watchGroup) select ((count units _watchGroup)-1);
       _unit setPos (_bpos select (round random ((count _bpos)-1)));
   	  _unit setDir random 359;
       _unit setUnitPos "UP";
       doStop _unit;
+	  _unit disableAI "PATH";
    };
  
-} foreach _watch;
+} foreach (_compound select MISYS_WATCH); //watch
 
 
 //Spawn foot patrols
@@ -128,8 +134,6 @@ for "_i" from  1 to (round (_strength*(_patrolCount))) do {
     };
     [_patrolgroup, _pos, 100] call BIS_fnc_taskPatrol;
 };
-
-
 
 
 
