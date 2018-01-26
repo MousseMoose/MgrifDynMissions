@@ -16,36 +16,56 @@ params [
 	["_name",0],
 	["_size",0],
 	["_pos",0],
-	["_dir",0]
+	["_dir",0],
+	["_comps",[]],
+	["_compNames", []],
+	["_faction","FIA"],
+	["_strength", 1],
+	["_radius", 33]
 ];
-
-
 
 
 //Load mission data
 _file = getText(MGRIF_CONFIGROOT >> "CfgMisysCompounds" >> _size >> _name >> "file");
 _compound = [_file,_pos,_dir] call mgrif_fnc_misys_createComposition;
 
-_components = getArray (MGRIF_CONFIGROOT >> "CfgMisysCompounds" >> _size >> _name >> "components");
-if(count (_components) > 0) then {
+_compSizes = getArray (MGRIF_CONFIGROOT >> "CfgMisysCompounds" >> _size >> _name >> "components");
+
+
+if((count _compNames) == 0) then {
+	_compNames = [];
+	{_compNames pushback "rand"} foreach _compSizes;
+};
+
+if(count (_compSizes) > 0) then {
 	{
-		//select a random component of given Size and Type
-		_comp = (MGRIF_CONFIGROOT >> "CfgMisysCompoundComponents" >> (_x select 0) >> (_x select 1));
+		_comp = (MGRIF_CONFIGROOT >> "CfgMisysCompoundComponents" >> (_comps select _forEachIndex) >> _x);
+		
+		//hint format ["%1 ... %2",_x,_comps select _forEachIndex];
+
+		
 		//select a random component of given size and type
-		_compFile = getText ((_comp select random ((count _comp)-1)) >> "file");
-		diag_log str _compound;
-		diag_log format ["Parameter 1 %1",_compFile];
-		diag_log format ["Parameter 2 %1",position ((_compound select MISYS_COMPS) select _forEachIndex)];
-		diag_log format ["Parameter 3 %1",getDir ((_compound select MISYS_COMPS) select _forEachIndex)];
+		//_compFile = getText ((_comp select random ((count _comp)-1)) >> "file");
+		
+		_compName = _compNames select _forEachIndex;
+		_compFile = "";
+		if(_compName == "rand") then {
+			_compFile = getText ((_comp select random ((count _comp)-1)) >> "file");
+		} else {
+			_compFile = getText (_comp >> _compName >> "file");
+		};
+		
+		
 		_compObjs = [
 						_compFile,
 						position ((_compound select MISYS_COMPS) select _forEachIndex),
 						getDir ((_compound select MISYS_COMPS) select _forEachIndex)
 					] call mgrif_fnc_misys_createComposition;
 		{
+			//TODO: REENABLE THIS
 			//(_compound select _forEachIndex) append _x;
 		} foreach _compObjs;
-	} foreach _components;
+	} foreach _compSizes;
 	
 	{deleteVehicle _x} foreach (_compound select MISYS_COMPS);
 };
@@ -53,9 +73,9 @@ if(count (_components) > 0) then {
 //AI
 //------------------------------------------------------------------------------------------------------------
 //hardcode stuff for now
-_faction = "FIA";
-_strength = 1;
-_radius = 33;
+
+
+
 
 
 _watchGroup = createGroup OPFOR;
@@ -72,7 +92,7 @@ _watchGroup = createGroup OPFOR;
             _highest = _x;
             
         };
-    } foreach _bpos;
+    } forEach _bpos;
 
     
     if(random 1 >= 0.3) then {//"B_G_Soldier_GL_F"

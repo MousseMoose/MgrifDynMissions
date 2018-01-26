@@ -1,8 +1,8 @@
 class CfgMisysCompounds {
-	class Size33 {
+	class S33 {
 		class CampAudacity {
 			file = "misys\compounds\campAudacityModular.sqf";
-			components[] ={{"Props","S5"},{"Props","S10"},{"Props","S5"},{"Props","S10"}};
+			components[] ={"S5","S10","S5","S10"};
 		};
 	};
 	
