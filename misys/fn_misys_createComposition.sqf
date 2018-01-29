@@ -7,14 +7,14 @@
 #define MGRIF_CONFIGROOT missionconfigFile
 
 //TODO: better defaults, macro?
-/*params [
-	["_file",0],
-	["_pos",0],
+params [
+	["_file",""],
+	["_pos",[]],
 	["_dir",0]
-];*/
-_file = _this select 0;
-_pos = _this select 1;
-_dir = _this select 2;
+];
+//_file = _this select 0;
+//_pos = _this select 1;
+//_dir = _this select 2;
 
 private ["_params","_meta","_watch","_buildings","_props","_statics","_comps"];
 //Load composition

@@ -6,7 +6,8 @@
 #define MISYS_COMPS 	5
 #define MGRIF_CONFIGROOT missionconfigFile
 
-#define MGRIF_FACTION_TRAIT_S(FAC,TRAIT) getText MGRIF_FACTION_TRAIT(FAC,TRAIT)
+//old faction system macros
+#define MGRIF_TRAIT_S(FAC,TRAIT) getText MGRIF_FACTION_TRAIT(FAC,TRAIT)
 #define MGRIF_FACTION_TRAIT_N(FAC,TRAIT) getNumber MGRIF_FACTION_TRAIT(FAC,TRAIT)
 #define MGRIF_FACTION_TRAIT_A(FAC,TRAIT) getArray MGRIF_FACTION_TRAIT(FAC,TRAIT)
 #define MGRIF_FACTION_TRAIT(FAC,TRAIT) (MGRIF_CONFIGROOT >> "cfgMgrifFactions" >> FAC >> TRAIT)
@@ -40,30 +41,29 @@ if((count _compNames) == 0) then {
 if(count (_compSizes) > 0) then {
 	{
 		_comp = (MGRIF_CONFIGROOT >> "CfgMisysCompoundComponents" >> (_comps select _forEachIndex) >> _x);
-		
-		//hint format ["%1 ... %2",_x,_comps select _forEachIndex];
-
-		
-		//select a random component of given size and type
-		//_compFile = getText ((_comp select random ((count _comp)-1)) >> "file");
+		_compPos = position ((_compound select MISYS_COMPS) select _forEachIndex);
+		_compDir = getDir ((_compound select MISYS_COMPS) select _forEachIndex);
 		
 		_compName = _compNames select _forEachIndex;
 		_compFile = "";
+		_compConfig = "";
 		if(_compName == "rand") then {
-			_compFile = getText ((_comp select random ((count _comp)-1)) >> "file");
+			//_compConfig = (_comp select random ((count _comp)-1));
+			_compConfig = [_comp] call mgrif_fnc_misys_selectRandomConfig;
 		} else {
-			_compFile = getText (_comp >> _compName >> "file");
+			_compConfig = (_comp >> _compName);
 		};
-		
-		
+		_compFile = getText (_compConfig >> "file");
 		_compObjs = [
 						_compFile,
-						position ((_compound select MISYS_COMPS) select _forEachIndex),
-						getDir ((_compound select MISYS_COMPS) select _forEachIndex)
+						_compPos,
+						_compDir
 					] call mgrif_fnc_misys_createComposition;
+		_compCustom = [_pos, _dir, _compPos, _compDir, _faction, _strength, _compObjs] call call compile getText (MGRIF_CONFIGROOT >> "CfgMisysCompoundComponents" >> (_comps select _forEachIndex) >> "function");
+		//_compNameCustom = [_compound, _compObjs] call call compile getText (_compConfig >> "function");
 		{
-			//TODO: REENABLE THIS
-			//(_compound select _forEachIndex) append _x;
+			//TODO: edge case index 0 (should remain in array, instead of just being appended)
+			(_compound select _forEachIndex) append _x;
 		} foreach _compObjs;
 	} foreach _compSizes;
 	
@@ -72,10 +72,23 @@ if(count (_compSizes) > 0) then {
 
 //AI
 //------------------------------------------------------------------------------------------------------------
-//hardcode stuff for now
 
-
-
+{
+	_buildingGroup = createGroup OPFOR;
+	_bpos = (_x buildingPos -1);
+	{
+		if((random 1) >0.75) then {
+			_unit = 	[
+      			'rifleman',
+      			_buildingGroup,
+     			_x,
+                _faction
+                ] call mgrif_fnc_misys_createUnit;
+        _unit setUnitPos "UP";
+        doStop _unit;
+		};
+	} foreach _bpos;
+} foreach (_compound select MISYS_BUILDINGS); 
 
 
 _watchGroup = createGroup OPFOR;
@@ -95,35 +108,31 @@ _watchGroup = createGroup OPFOR;
     } forEach _bpos;
 
     
-    if(random 1 >= 0.3) then {//"B_G_Soldier_GL_F"
-       	//_unit = _watchGroup createUnit ["I_Soldier_lite_F",_highest,[],0,"NOTHING"];
+    if(random 1 >= 0.3) then {
          _unit = 	[
-      			'soldier',
+      			'marksman',
       			_watchgroup,
      			_highest,
                 _faction
                 ] call mgrif_fnc_misys_createUnit;
-        [_unit] join _watchGroup;
-        //_unit =  (units _watchGroup) select ((count units _watchGroup)-1);
+       // [_unit] join _watchGroup; 
         _unit setDir random 359;
         _unit setPos _highest;
         _unit setUnitPos "UP";
         doStop _unit;
+		_unit disableAI "PATH";
     };
     
     
    if(_strength >0.75 && (random 1 > 0.5)) then {
-      //"I_Soldier_lite_F" createUnit [_bpos select (round random ((count _bpos)-1)), _watchGroup];
-      //_unit = _watchGroup createUnit ["I_Soldier_lite_F",_highest,[],0,"NOTHING"];
       _unit = 	[
-      			'soldier',
+      			'grenadier',
       			_watchgroup,
      			_bpos select (round random ((count _bpos)-1)),
                 _faction
                 ] call mgrif_fnc_misys_createUnit;
-      [_unit] join _watchGroup;
+      //[_unit] join _watchGroup;
 	  
-     // _unit =  (units _watchGroup) select ((count units _watchGroup)-1);
       _unit setPos (_bpos select (round random ((count _bpos)-1)));
   	  _unit setDir random 359;
       _unit setUnitPos "UP";
@@ -131,29 +140,31 @@ _watchGroup = createGroup OPFOR;
 	  _unit disableAI "PATH";
    };
  
-} foreach (_compound select MISYS_WATCH); //watch
+} foreach (_compound select MISYS_WATCH); 
 
 
 //Spawn foot patrols
 _patrolGroups = [];
 
-_patrolCount = MGRIF_FACTION_TRAIT_N(_faction,"patrolMaxCount");
+_patrolCount = 2;
 for "_i" from  1 to (round (_strength*(_patrolCount))) do {
     _patrolGroup = createGroup OPFOR;
     _patrolGroups pushBack _patrolGroup;
     _safePos = [_pos, _radius, _radius+10, 3, 0, 20, 0] call BIS_fnc_findSafePos;
     for "_i" from 1 to (_patrolCount) do {
       	 _unit = 	[
-      			'soldier',
+      			'rifleman',
       			_patrolGroup,
      			_safePos,
                 _faction
                 ] call mgrif_fnc_misys_createUnit;
-                [_unit] join _patrolGroup;
+                //[_unit] join _patrolGroup;
                 
     };
     [_patrolgroup, _pos, 100] call BIS_fnc_taskPatrol;
 };
+
+_compound
 
 
 
