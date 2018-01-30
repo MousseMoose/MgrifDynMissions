@@ -21,10 +21,19 @@ class CfgMgrifFactions {
 		carsTurret[] = {"O_G_Offroad_01_armed_F"};
 		armor[] = {};
 		armorHideTurret[] = {};
-		helicoptersTransport[] = {"C_Heli_Light_01_civil_F"};
-		helicoptersAttack[] = {"C_Heli_Light_01_civil_F"};
-		planesTransport[] = {};
-		planesAttack[] = {};
+		
+		class helicoptersTransport {
+			class C_Heli_Light_01_civil_F {
+				textures[] = {"a3\air_f\heli_light_01\data\skins\heli_light_01_ext_digital_co.paa"};
+			};
+			
+		};
+		class  helicoptersAttack {
+		};
+		class planesTransport {
+		};
+		class planesAttack {
+		};
 	};
 	
 	class Fia:BaseFaction {

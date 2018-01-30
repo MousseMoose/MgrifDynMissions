@@ -5,6 +5,8 @@ class misys {
 	class misys_createComposition {};
 	class misys_createUnit {};
 	class misys_createUnitRandom {};
+	class misys_createVehicle {};
+	
 	
 	class misys_componentGarrison {};
 	class misys_componentProps {};
