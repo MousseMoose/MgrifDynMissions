@@ -9,17 +9,7 @@ class CfgMisysCompounds {
 };
 
 class CfgMisysCompoundComponents {
-	class Armory {
-		function = "mgrif_fnc_misys_componentArmory";
-		class S5 {
-			class AudacityArmory {
-				file = "misys\components\braveryArmory.sqf";
-			};
-		};
-		
-		class S10 {
-		};
-	};
+
 	
 	class Garage {
 		function = "mgrif_fnc_misys_componentGarage";

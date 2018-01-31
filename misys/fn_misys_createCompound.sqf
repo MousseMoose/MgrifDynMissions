@@ -26,6 +26,8 @@ params [
 ];
 
 
+//private ["_file","_compound","compSizes"];
+
 //Load mission data
 _file = getText(MGRIF_CONFIGROOT >> "CfgMisysCompounds" >> _size >> _name >> "file");
 _compound = [_file,_pos,_dir] call mgrif_fnc_misys_createComposition;
@@ -59,6 +61,7 @@ if(count (_compSizes) > 0) then {
 						_compPos,
 						_compDir
 					] call mgrif_fnc_misys_createComposition;
+		
 		_compCustom = [_pos, _dir, _compPos, _compDir, _faction, _strength, _compObjs] call call compile getText (MGRIF_CONFIGROOT >> "CfgMisysCompoundComponents" >> (_comps select _forEachIndex) >> "function");
 		//_compNameCustom = [_compound, _compObjs] call call compile getText (_compConfig >> "function");
 		{

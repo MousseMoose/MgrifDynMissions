@@ -30,7 +30,6 @@ _buildingCount = 0;
 	_pos = _pos vectorAdd [random 1, random 1,0];
 	_group = createGroup OPFOR;
 	//at least one soldier per building because tents
-	//_class = ["rifleman","marksman","machinegunner","medic","lat","grenadier"] selectRandomWeighted [1,0.1,0.1,0.1,0.1,0.1];
 	_unit = [
 		_group,
 		_pos vectorAdd [0.1*(_forEachIndex),0.1*_buildingCount,0],
@@ -41,7 +40,6 @@ _buildingCount = 0;
 		
 		
 		if(random 1 > 0.7) then {
-			//_class = ["rifleman","marksman","machinegunner","medic","lat","grenadier"] selectRandomWeighted [1,0.1,0.1,0.1,0.1,0.1];
 			_unit = [
       			_group,
      			_pos vectorAdd [0.1*(1+_forEachIndex),0.1*_buildingCount,0],

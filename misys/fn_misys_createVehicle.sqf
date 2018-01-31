@@ -23,6 +23,3 @@ _veh setVariable ["BIS_enableRandomization", false];
 } foreach getArray(MGRIF_CONFIGROOT >> "CfgMgrifFactions" >> _faction  >> _generalClass >> _specificClass >> "textures");
 
 _veh
-	
-
-

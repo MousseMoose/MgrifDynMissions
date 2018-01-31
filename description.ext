@@ -1,5 +1,6 @@
 #include "misys\factions.hpp"
 #include "misys\compounds.hpp"
+#include "misys\objectives.hpp"
 
 class cfgFunctions {
 	class mgrif {

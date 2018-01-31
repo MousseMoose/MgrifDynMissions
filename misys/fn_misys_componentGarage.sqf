@@ -28,7 +28,7 @@ _config = (MGRIF_CONFIGROOT >> "CfgMgrifFactions" >> _faction  >> "cars");
 	
 	if((count _config)>0) then {
 		_veh = ["fia","cars","rand",(position _x)] call mgrif_fnc_misys_createVehicle;
-		_veh setVariable ["BIS_enableRandomization", false];
+		//_veh setVariable ["BIS_enableRandomization", false];
 		_veh setDir (getDir _x);
 		_vehs pushBack _veh;
 		

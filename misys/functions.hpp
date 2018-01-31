@@ -13,6 +13,8 @@ class misys {
 	class misys_componentProps {};
 	class misys_componentHelipad {};
 	
+	class misys_ObjectiveEliminate {};
+	
 	class misys_determineRarity {};
 	class misys_getGearArr {};
 	class misys_getGearText {};
