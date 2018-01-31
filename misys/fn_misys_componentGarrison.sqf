@@ -57,8 +57,5 @@ _buildingCount = 0;
 
 
 
-[
-	[],
-	[_group]
-]
+_groups
 	

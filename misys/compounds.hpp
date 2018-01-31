@@ -21,11 +21,18 @@ class CfgMisysCompoundComponents {
 		};
 	};
 	
-	class Medical {
+	class Garage {
+		function = "mgrif_fnc_misys_componentGarage";
 		class S5 {
+			class Car {
+				file = "misys\components\s5GarageCar.sqf";
+			};
 		};
 		
 		class S10 {
+			class Net {
+				file = "misys\components\s10GarageNet.sqf";
+			};
 		};
 	};
 	
@@ -38,7 +45,7 @@ class CfgMisysCompoundComponents {
 		};
 		
 		class S10 {
-			class Helipad {
+			class HelipadProps {
 				file = "misys\components\s10helipad.sqf";
 			};
 		};

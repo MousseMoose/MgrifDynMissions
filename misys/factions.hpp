@@ -17,10 +17,15 @@ class CfgMgrifFactions {
 		availableStandardLoadouts[] = {"rifleman","marksman","machinegunner","medic","lat","grenadier"};
 		standardLoadoutWeights[] = {1,0.1,0.1,0.1,0.1,0.1};
 		
-		cars[] = {"O_G_Offroad_01_F","O_G_Van_01_transport_F"};
+		class cars {
+			class B_G_Offroad_01_F {
+				textures[] = {};
+			};
+		}
 		carsTurret[] = {"O_G_Offroad_01_armed_F"};
 		armor[] = {};
 		armorHideTurret[] = {};
+		
 		
 		class helicoptersTransport {
 			class C_Heli_Light_01_civil_F {

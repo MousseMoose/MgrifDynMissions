@@ -23,10 +23,11 @@ private ["_config","_veh", "_vehs"];
 //TODO: create special component objs array in all components
 _pad = (_compObjs select MISYS_SPECIAL) select 0;
 _vehs = [];
-_config = (MGRIF_CONFIGROOT >> "CfgMgrifFactions" >> _faction  >> "helicoptersTransport");
+_config = (MGRIF_CONFIGROOT >> "CfgMgrifFactions" >> _faction  >> "cars");
 {
+	
 	if((count _config)>0) then {
-		_veh = ["fia","helicoptersTransport","rand",(position _x)] call mgrif_fnc_misys_createVehicle;
+		_veh = ["fia","cars","rand",(position _x)] call mgrif_fnc_misys_createVehicle;
 		_veh setVariable ["BIS_enableRandomization", false];
 		_veh setDir (getDir _x);
 		_vehs pushBack _veh;

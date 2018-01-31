@@ -9,6 +9,7 @@ class misys {
 	
 	
 	class misys_componentGarrison {};
+	class misys_componentGarage {};
 	class misys_componentProps {};
 	class misys_componentHelipad {};
 	
