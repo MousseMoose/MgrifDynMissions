@@ -3,4 +3,8 @@ class CfgMisysObjectives {
 		function = "mgrif_fnc_misys_objectiveEliminate";
 	};
 	
+	class Raze {
+		function = "mgrif_fnc_misys_objectiveRaze";
+	};
+	
 };

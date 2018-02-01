@@ -20,16 +20,39 @@ params [
 	["_objectives",["Eliminate"]]
 ];
 
+_missionGroup = createGroup sideLogic;
+_mission = (createGroup sideLogic) createUnit ["LOGIC", _pos, [], 0, "NONE"];
+p3 = _mission;
+
 private ["_positions"];
 _positions = [];
+_blackList = [];
 
 {
-	_compoundPos = [_pos, 500, 1500, 33, 0, 0.06, 0] call BIS_fnc_findSafePos;
-	//player setPos _compoundPos;
+
+	_compoundPos = [_pos, 500, 1500, 33, 0, 0.06, 0,_blackList] call BIS_fnc_findSafePos;
+	
 	// make array 3 dimensional
 	_compoundPos pushback 0;
-	_compound = ["CampAudacity","S33",_compoundPos, random 359,["Garage","Helipad","Props","Garrison"], ["rand","rand","rand","rand"]] call mgrif_fnc_misys_createCompound;
-	[_compoundPos, _faction] call mgrif_fnc_misys_objectiveEliminate;
+	_configSize = [(MGRIF_CONFIGROOT >> "CfgMisysCompounds")] call mgrif_fnc_misys_selectRandomConfig;
+	
+	_blackList pushback [_compoundPos,250];
+	
+	_configCompound = [_configSize] call mgrif_fnc_misys_selectRandomConfig;
+	_compoundComponents = getArray (_configCompound >> "components");
+	_componentTypes = [];
+	{
+		_componentTypes pushBack (selectRandom getArray (MGRIF_CONFIGROOT >> "CfgMisysCompoundComponents" >> ("available" + _x)));
+		
+	} forEach _compoundComponents;
+	_compound = [configName _configCompound,configName _configSize,_compoundPos, random 359,_componentTypes] call mgrif_fnc_misys_createCompound;
+	
+	
+	_objective =  getText(([(MGRIF_CONFIGROOT >> "CfgMisysObjectives")] call mgrif_fnc_misys_selectRandomConfig) >> "function");
+	//_objective = "mgrif_fnc_misys_objectiveRaze";
+	//hint str [(str _mission) + (str _forEachIndex)];
+	[_compoundPos, _faction,_compound,_mission,(str _mission) + (str _forEachIndex)] call call compile _objective;
+	
     createMarker [str _compoundPos, _compoundPos];
 	(str _compoundPos) setMarkerType "flag_FIA";
 	_positions pushBack _compoundPos;

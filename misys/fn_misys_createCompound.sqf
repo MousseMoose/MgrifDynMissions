@@ -111,7 +111,7 @@ _watchGroup = createGroup OPFOR;
     } forEach _bpos;
 
     
-    if(random 1 >= 0.3) then {
+    if(true) then { //random 1 >= 0.3
          _unit = 	[
       			'marksman',
       			_watchgroup,
@@ -127,7 +127,7 @@ _watchGroup = createGroup OPFOR;
     };
     
     
-   if(_strength >0.75 && (random 1 > 0.5)) then {
+   if(true) then { //_strength >0.75 && (random 1 > 0.5)
       _unit = 	[
       			'grenadier',
       			_watchgroup,

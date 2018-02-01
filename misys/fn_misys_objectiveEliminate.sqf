@@ -11,8 +11,11 @@
 params [
 	["_pos",[]],
 	["_faction","Fia"],
-	["_compound",[]]
+	["_compound",[]],
+	["_mission",objNull],
+	["_taskName",objNull]
 ];
+
 
 private ["_group"];
 

@@ -24,11 +24,11 @@ private ["_group","_unit"];
 
 
 
-_groups = [];
 _buildingCount = 0;
+_group = createGroup OPFOR;
 {
 	_pos = _pos vectorAdd [random 1, random 1,0];
-	_group = createGroup OPFOR;
+	
 	//at least one soldier per building because tents
 	_unit = [
 		_group,
@@ -48,12 +48,12 @@ _buildingCount = 0;
 		};		
 	} foreach (_x buildingPos -1); //foreach 
 	_buildingCount = _buildingCount + 1;
-	_groups pushBack _group;
+	
 } forEach (_compObjs select MISYS_BUILDINGS);
 
 
 
 
 
-_groups
+[_group]
 	
