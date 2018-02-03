@@ -31,14 +31,13 @@ _blackList = [];
 {
 
 	_compoundPos = [_pos, 500, 1500, 33, 0, 0.06, 0,_blackList] call BIS_fnc_findSafePos;
-	
 	// make array 3 dimensional
 	_compoundPos pushback 0;
-	_configSize = [(MGRIF_CONFIGROOT >> "CfgMisysCompounds")] call mgrif_fnc_misys_selectRandomConfig;
-	
 	_blackList pushback [_compoundPos,250];
 	
+	_configSize = [(MGRIF_CONFIGROOT >> "CfgMisysCompounds")] call mgrif_fnc_misys_selectRandomConfig;
 	_configCompound = [_configSize] call mgrif_fnc_misys_selectRandomConfig;
+	
 	_compoundComponents = getArray (_configCompound >> "components");
 	_componentTypes = [];
 	{
@@ -47,10 +46,13 @@ _blackList = [];
 	} forEach _compoundComponents;
 	_compound = [configName _configCompound,configName _configSize,_compoundPos, random 359,_componentTypes] call mgrif_fnc_misys_createCompound;
 	
-	
-	_objective =  getText(([(MGRIF_CONFIGROOT >> "CfgMisysObjectives")] call mgrif_fnc_misys_selectRandomConfig) >> "function");
-	//_objective = "mgrif_fnc_misys_objectiveRaze";
-	//hint str [(str _mission) + (str _forEachIndex)];
+	_objective = "";
+	if(_x == "Rand") then {
+		_objective =  getText(([(MGRIF_CONFIGROOT >> "CfgMisysObjectives")] call mgrif_fnc_misys_selectRandomConfig) >> "function");
+	} else {
+		_objective =  getText(MGRIF_CONFIGROOT >> "CfgMisysObjectives" >> _x >> "function");
+	};
+
 	[_compoundPos, _faction,_compound,_mission,(str _mission) + (str _forEachIndex)] call call compile _objective;
 	
     createMarker [str _compoundPos, _compoundPos];

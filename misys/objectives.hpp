@@ -7,4 +7,8 @@ class CfgMisysObjectives {
 		function = "mgrif_fnc_misys_objectiveRaze";
 	};
 	
+	class Intel {
+		function = "mgrif_fnc_misys_objectiveIntel";
+	};
+	
 };

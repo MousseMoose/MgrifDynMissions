@@ -16,6 +16,7 @@ class misys {
 	
 	class misys_ObjectiveEliminate {};
 	class misys_ObjectiveRaze {};
+	class misys_ObjectiveIntel {};
 	
 	class misys_determineRarity {};
 	class misys_getGearArr {};
