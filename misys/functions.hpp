@@ -3,9 +3,15 @@ class misys {
 	class misys_createMission {};
 	class misys_createCompound {};
 	class misys_createComposition {};
+	class misys_createLocationCompound {};
+	
+	
 	class misys_createUnit {};
 	class misys_createUnitRandom {};
+	class misys_createInfantryGroup {};
 	class misys_createVehicle {};
+	
+	class misys_occupyBuilding {};
 	
 	
 	class misys_componentGarrison {};
@@ -18,10 +24,9 @@ class misys {
 	class misys_ObjectiveRaze {};
 	class misys_ObjectiveIntel {};
 	
-	class misys_determineRarity {};
-	class misys_getGearArr {};
-	class misys_getGearText {};
 	class misys_selectRandomConfig {};
 	class misys_selectRandomConfigLimits {};
+	class misys_nearestLocationsLimits {};
+	class misys_LocationPositionVaried {};
 	
 		};

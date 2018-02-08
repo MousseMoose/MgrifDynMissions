@@ -19,8 +19,12 @@ params [
 private ["_buildings","_buildingPos"];
 
 
-_buildings = _compound select MISYS_BUILDINGS;
-//todo: filter buildings
+_buildings = [];
+{
+	if((count (_x buildingPos -1)) > 0 ) then { _buildings pushBack _x };
+} forEach (_compound select MISYS_BUILDINGS);
+
+
 
 _intelligence = objNull;
 _intelligencePos = [];
@@ -28,17 +32,12 @@ _intelligencePos = [];
 if((count _buildings)>0) then {
 	_buil = selectRandom _buildings;
 	_buildingPos = _buil buildingPos -1;
-	if ((count _buildingPos)>0) then {
-		_intelligencePos = selectRandom _buildingPos;
-
-	} else {
-		_intelligencePos = [_pos, 0, 7, 1, 0, 0.5, 0] call bis_fnc_findSafePos;
-		_intelligencePos pushBack 0.1;
-	};
+	_intelligencePos = selectRandom _buildingPos;
+	
 } else {
-	_watch = _compound select WATCH;
+	_watch = _compound select MISYS_WATCH;
 	if((count _watch)>0) then {
-		_buil = selectRandom _buildings;
+		_buil = selectRandom _watch;
 		_intelligencePos = selectRandom (_buil buildingPos -1);
 	} else {
 		_intelligencePos = [_pos, 0, 7, 1, 0, 0.5, 0] call bis_fnc_findSafePos;
@@ -46,8 +45,6 @@ if((count _buildings)>0) then {
 	};
 };
 
-
-//_intelligence = "Land_Tablet_02_F" createVehicle (_intelligencePos vectorAdd [0,0,0.1]);
 _intelligence = createVehicle ["Land_Tablet_02_F", (_intelligencePos vectorAdd [0,0,0.1]), [], 0, "CAN_COLLIDE"];
 
 _intelligence setVariable ["mgrif_taskname",_taskname,true];
@@ -56,7 +53,6 @@ private "_target";
 _target = -2;
 if ((isMultiplayer && !isDedicated) || (!isMultiplayer)) then {
 	_target = 0;
-} else {
 };
 
 [_intelligence,["Collect Intel",{

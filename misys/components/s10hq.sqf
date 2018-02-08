@@ -16,7 +16,9 @@
     
     //4 Static defense positions
     [
-		["Land_HelipadEmpty_F",[2.92969,2.71387,-0.0663576],359.999,1,0,[],"","",true,false]
+		[],
+		["Land_HelipadEmpty_F",[2.92969,2.71387,-0.0663576],359.999,1,0,[],"","",true,false],
+		[]
 	],
 	
 	//5 Components positions

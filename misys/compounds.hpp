@@ -19,9 +19,6 @@ class CfgMisysCompoundComponents {
 	availableS7p5[] = {"Garage","Props","Garrison"};
 	availableS10[] = {"Garage","Props","Garrison","Helipad","Medical"};
 	
-	
-	
-	
 	class Garage {
 		function = "mgrif_fnc_misys_componentGarage";
 		class S5 {
@@ -106,5 +103,14 @@ class CfgMisysCompoundComponents {
 				file = "misys\components\s10helipad.sqf";
 			};
 		};
+	};
+};
+
+class CfgMisysLocationComponents {
+};
+
+class CfgMisysRoadblocks {
+	class JunkBarricade {
+		file = "misys\roadblocks\rbJunkBarricade.sqf";
 	};
 };
