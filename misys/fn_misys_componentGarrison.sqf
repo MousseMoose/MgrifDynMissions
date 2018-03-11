@@ -26,6 +26,8 @@ private ["_group","_unit"];
 
 _buildingCount = 0;
 _group = createGroup OPFOR;
+
+
 {
 	_pos = _pos vectorAdd [random 1, random 1,0];
 	
@@ -51,9 +53,20 @@ _group = createGroup OPFOR;
 	
 } forEach (_compObjs select MISYS_BUILDINGS);
 
+_lrPatrolPos = [_pos,2,33,false] call mgrif_fnc_misys_safePosCompound;
+_lrPatrolPos set [2,0];
+_lrPatrolGrp = [count units _group,_lrPatrolPos, _faction] call mgrif_fnc_misys_createInfantryGroup;
 
 
 
-
-[_group]
+//[Objects/Props,Groups,Vehicles]
+[
+	[
+		[_group],
+		[_lrPatrolGrp],
+		[]
+	],
+	[],
+	[]
+]
 	

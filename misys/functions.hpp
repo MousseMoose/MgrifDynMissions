@@ -1,5 +1,6 @@
 class misys {
 	file = "misys";
+	class misys_createScenario {};
 	class misys_createMission {};
 	class misys_createCompound {};
 	class misys_createComposition {};
@@ -24,9 +25,12 @@ class misys {
 	class misys_ObjectiveRaze {};
 	class misys_ObjectiveIntel {};
 	
+	class misys_configEmpty {};
 	class misys_selectRandomConfig {};
 	class misys_selectRandomConfigLimits {};
 	class misys_nearestLocationsLimits {};
 	class misys_LocationPositionVaried {};
+	class misys_safePosCompound {};
+	class misys_patrolFromPositions {};
 	
 		};

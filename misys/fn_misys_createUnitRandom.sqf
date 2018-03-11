@@ -6,9 +6,9 @@ _group = _this select 1;
 _pos = _this select 2;
 _faction = _this select 3;*/
 params [
-		"_group",
-		"_pos",
-		"_faction"];
+		["_group",grpNull],
+		["_pos",[]],
+		["_faction","Fia"]];
 
 
 

@@ -26,7 +26,7 @@ params [
 ];
 
 
-//private ["_file","_compound","compSizes"];
+private ["_file","_compound","_compSizes","_provided"];
 
 //Load mission data
 _file = getText(MGRIF_CONFIGROOT >> "CfgMisysCompounds" >> _size >> _name >> "file");
@@ -39,6 +39,21 @@ if((count _compNames) == 0) then {
 	_compNames = [];
 	{_compNames pushback "rand"} foreach _compSizes;
 };
+
+_compReturns = [];
+
+
+//
+_provided = 
+[
+	[
+		[],	//local patrols
+		[], //AO Patrols
+		[] // Special Groups
+	],
+	[], //loot vehicles
+	[] //props
+];
 
 if(count (_compSizes) > 0) then {
 	{
@@ -63,6 +78,13 @@ if(count (_compSizes) > 0) then {
 					] call mgrif_fnc_misys_createComposition;
 		
 		_compCustom = [_pos, _dir, _compPos, _compDir, _faction, _strength, _compObjs] call call compile getText (MGRIF_CONFIGROOT >> "CfgMisysCompoundComponents" >> (_comps select _forEachIndex) >> "function");
+		//Set up provided
+		
+		{((_provided select 0) select _forEachIndex) append _x } forEach (_compCustom select 0);
+		{(_provided select _x) append (_compCustom select _x)} forEach [1,2];
+		// 
+		
+		
 		//_compNameCustom = [_compound, _compObjs] call call compile getText (_compConfig >> "function");
 		{
 			//TODO: edge case index 0 (should remain in array, instead of just being appended)
@@ -75,7 +97,7 @@ if(count (_compSizes) > 0) then {
 
 //AI
 //------------------------------------------------------------------------------------------------------------
-
+_buildingGroups = [];
 {
 	_buildingGroup = createGroup OPFOR;
 	_bpos = (_x buildingPos -1);
@@ -91,6 +113,7 @@ if(count (_compSizes) > 0) then {
         doStop _unit;
 		};
 	} foreach _bpos;
+	_buildingGroups pushBack _buildingGroup;
 } foreach (_compound select MISYS_BUILDINGS); 
 
 
@@ -161,13 +184,20 @@ for "_i" from  1 to (round (_strength*(_patrolCount))) do {
      			_safePos,
                 _faction
                 ] call mgrif_fnc_misys_createUnit;
-                //[_unit] join _patrolGroup;
                 
     };
-    [_patrolgroup, _pos, 100] call BIS_fnc_taskPatrol;
+    //[_patrolgroup, _pos, 100] call BIS_fnc_taskPatrol;
 };
+{((_provided select 0) select 0) pushBack _x } forEach _patrolGroups; //todo: should probably append
 
-_compound
+{
+	[_x, _compoundPos, 100,[[_compoundPos,33]]] call BIS_fnc_taskPatrol;
+} forEach _patrolGroups;
+
+_groups = [[_watchGroup],_buildingGroups];
+
+
+[_compound,_groups,_provided]
 
 
 

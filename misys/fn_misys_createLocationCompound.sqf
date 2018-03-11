@@ -12,7 +12,7 @@ params [
 	["_size",50]
 ];
 
-private ["_center","_veh","_unit","_dir","_groups","_group","_count"];
+private ["_center","_veh","_unit","_dir","_groups","_group","_count","_compound","_provided"];
 _compound = [];
 
 /*_pos =  locationPosition _location;
@@ -111,7 +111,6 @@ _groups = [];
 	_groups pushBack ([_x,_faction] call mgrif_fnc_misys_occupyBuilding);
 } forEach _houses;
 
-
 {
 	_patrolPos = [position (selectRandom _roads), 0, 5, 1, 0, 20, 0] call BIS_fnc_findSafePos;
 	_patrolPos set [2,0];
@@ -119,13 +118,17 @@ _groups = [];
 	_group =  ([_x,	
 				_patrolPos,
 				_faction] call mgrif_fnc_misys_createInfantryGroup);
-	_group setBehaviour "SAFE";
-	_group setFormation "COLUMN";
 	_groups pushback _group;
 } foreach [5,5];
 
+
+_thresholdPositions = [];
+{_thresholdPositions pushBack (position (_x select 0)); } forEach _threshold; // get threshold road positions
+
 {
 	_group = _x;
+	
+	/*
 	_count = count _threshold;
 	{
 		//hint str [position (_x select 0),3];
@@ -134,13 +137,17 @@ _groups = [];
 			_wp setWaypointType "CYCLE";
 		};
 	} foreach _threshold;
-	reverse _threshold;
+	*/
+	
+	[_group,_thresholdPositions] call mgrif_fnc_misys_patrolFromPositions;
+	reverse _thresholdPositions;
 
 } forEach _groups;
 
 
+
 _compound = [
-	[name location,_size],
+	["Location at" + (str _pos),_size],
 	[],
 	_houses,
 	[],
@@ -148,7 +155,19 @@ _compound = [
 	_threshold
 ];
 
-_compound
+_provided = 
+[
+	[
+		[],	//local patrols
+		[], //AO Patrols
+		[] // Special Groups
+	],
+	[], //loot vehicles
+	[] //props
+];
+
+
+[_compound,_groups,_provided];
 
 
 

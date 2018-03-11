@@ -34,7 +34,7 @@ _buil addEventHandler ["Killed", {
 		_buil = _this select 0;
 		[_buil getVariable "mgrif_taskName",nil,nil,nil,"SUCCEEDED",nil,true] call bis_fnc_setTask;
 		deleteMarker (_buil getVariable "mgrif_taskName");
-		deleteVehicle _buil;
+		//deleteVehicle _buil;
 	};
 	
 }];

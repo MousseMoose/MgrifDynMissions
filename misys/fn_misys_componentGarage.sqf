@@ -24,6 +24,10 @@ private ["_config","_veh", "_vehs"];
 _pad = (_compObjs select MISYS_SPECIAL) select 0;
 _vehs = [];
 _config = (MGRIF_CONFIGROOT >> "CfgMgrifFactions" >> _faction  >> "cars");
+
+_groups = [];
+
+// in base
 {
 	
 	if((count _config)>0) then {
@@ -35,4 +39,28 @@ _config = (MGRIF_CONFIGROOT >> "CfgMgrifFactions" >> _faction  >> "cars");
 	};
 } foreach (_compObjs select MISYS_SPECIAL);
 
-_vehs
+_config = (MGRIF_CONFIGROOT >> "CfgMgrifFactions" >> _faction  >> "cars");
+_mountedPatrols = [];
+
+{
+	_config = (MGRIF_CONFIGROOT >> "CfgMgrifFactions" >> _faction  >> "carsTurret");
+	if(count _config  > 0) then {
+		_mppos = [_pos, 4,33,false] call mgrif_fnc_misys_safePosCompound;
+		_veh = [_faction,"carsTurret",_mppos,true] call mgrif_fnc_misys_createVehicle;
+		_mpgrp = group ((crew _veh) select 0);
+		_mountedPatrols pushBack _mpgrp;
+	};
+} forEach [1];
+
+//out of base
+// [Groups, loot vehicles, props]
+// groups: [Local Compound Patrols, AO Patrols,Special groups]
+[
+	[
+		[],
+		_mountedPatrols,
+		[]
+	],
+	_vehs,
+	[]
+]

@@ -34,4 +34,13 @@ _config = (MGRIF_CONFIGROOT >> "CfgMgrifFactions" >> _faction  >> "helicoptersTr
 	};
 } foreach (_compObjs select MISYS_SPECIAL);
 
-_vehs
+
+[
+	[
+		[],
+		[],
+		[]
+	],
+	_vehs,
+	[]
+]

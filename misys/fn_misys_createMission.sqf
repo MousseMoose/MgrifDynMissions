@@ -6,6 +6,7 @@
 #define MISYS_ENEMIES 	5
 #define MISYS_VEHICLES 	6
 #define MISYS_BASESKILL 0.25
+#define MISYS_COMPOUNDSIZE_MAX 33
 #define MGRIF_FACTION_TRAIT_S(FAC,TRAIT) getText MGRIF_FACTION_TRAIT(FAC,TRAIT)
 #define MGRIF_FACTION_TRAIT_N(FAC,TRAIT) getNumber MGRIF_FACTION_TRAIT(FAC,TRAIT)
 #define MGRIF_FACTION_TRAIT_A(FAC,TRAIT) getArray MGRIF_FACTION_TRAIT(FAC,TRAIT)
@@ -24,9 +25,10 @@ _missionGroup = createGroup sideLogic;
 _mission = (createGroup sideLogic) createUnit ["LOGIC", _pos, [], 0, "NONE"];
 //p3 = _mission;
 
-private ["_positions","_compoundPos","_compounds","_compound","_taskNames", "_taskName"];
+private ["_positions","_compoundPos","_compounds","_compound","_taskNames", "_taskName","_provided"];
 _positions = [];
 _blackList = [];
+_patrolPoints = [];
 
 //create Compounds
 _locations = [_pos,["NameCity","NameCityCapital","NameVillage"],2000,500] call mgrif_fnc_misys_nearestLocationsLimits;
@@ -36,18 +38,21 @@ _compounds = [];
 {
 	_compoundPos = [];
 	//_compound = [];
-	if(random 1 < 1 && (count _locations >0)) then {
+	if(random 1 < 0.3 && (count _locations >0)) then {
 		_locationIndex = round random ((count _locations)-1);
 		_location = _locations select _locationIndex;
 		_locations deleteAt _locationIndex;
 		
 		_compoundPos =  [_location] call mgrif_fnc_misys_locationPositionVaried;
+		_patrolPoints pushBack ([_compoundPos,2,250,false] call mgrif_fnc_misys_safePosCompound); 
 		_compounds pushBack [([_compoundPos,_faction,55] call mgrif_fnc_misys_createLocationCompound),_compoundPos];
+		
 		
 		
 		
 	} else {
 		_compoundPos = [_pos, 500, 2000, 33, 0, 0.06, 0,_blackList] call BIS_fnc_findSafePos;
+		_patrolPoints pushBack ([_compoundPos,2,MISYS_COMPOUNDSIZE_MAX,false] call mgrif_fnc_misys_safePosCompound);
 		// make array 3 dimensional
 		_compoundPos pushback 0;
 		_blackList pushback [_compoundPos,250];
@@ -73,11 +78,30 @@ _compounds = [];
 } forEach _objectives;
 
 _taskNames = [];
+
+//Set up patrols
+
+{	
+	
+	_provided = ((_x select 0) select 2);
+	_providedGroups = _provided select 0;
+	_compoundPos = _x select 1;
+	//local Patrols
+	
+	
+	{
+		
+		_ptPointsTemp = _patrolPoints call bis_fnc_arrayShuffle;
+		[_x,_ptPointsTemp] call mgrif_fnc_misys_patrolFromPositions;
+	} forEach (_providedGroups select 1);
+} forEach _compounds;
+
+
 {
 	//test1 = _compounds;
 	
 	_compoundComposite = selectRandom _compounds;
-	_compound = _compoundComposite select 0;
+	_compound = (_compoundComposite select 0) select 0;
 	_compoundPos = _compoundComposite select 1;
 	
 	
@@ -96,4 +120,4 @@ _taskNames = [];
 	_positions pushBack _compoundPos;
 } forEach _objectives;
 
-[_positions,_taskNames];
+[_positions,_taskNames, _compounds, _mission];
