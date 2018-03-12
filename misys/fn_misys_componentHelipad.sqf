@@ -26,7 +26,7 @@ _vehs = [];
 _config = (MGRIF_CONFIGROOT >> "CfgMgrifFactions" >> _faction  >> "helicoptersTransport");
 {
 	if((count _config)>0) then {
-		_veh = ["fia","helicoptersTransport",(position _x)] call mgrif_fnc_misys_createVehicle;
+		_veh = [_faction,"helicoptersTransport",(position _x)] call mgrif_fnc_misys_createVehicle;
 		_veh setVariable ["BIS_enableRandomization", false];
 		_veh setDir (getDir _x);
 		_vehs pushBack _veh;

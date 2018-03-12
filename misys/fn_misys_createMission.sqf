@@ -66,7 +66,7 @@ _compounds = [];
 			_componentTypes pushBack (selectRandom getArray (MGRIF_CONFIGROOT >> "CfgMisysCompoundComponents" >> ("available" + _x)));
 			
 		} forEach _compoundComponents;
-		_compound = [configName _configCompound,configName _configSize,_compoundPos, random 359,_componentTypes] call mgrif_fnc_misys_createCompound;
+		_compound = [configName _configCompound,configName _configSize,_compoundPos, random 359,_faction,_componentTypes] call mgrif_fnc_misys_createCompound;
 		_compounds pushBack [_compound,_compoundPos];
 		
 		

@@ -18,12 +18,14 @@ params [
 	["_size",0],
 	["_pos",0],
 	["_dir",0],
+	["_faction","FIA"],
 	["_comps",[]],
 	["_compNames", []],
-	["_faction","FIA"],
 	["_strength", 1],
 	["_radius", 33]
 ];
+
+
 
 
 private ["_file","_compound","_compSizes","_provided"];
@@ -171,7 +173,6 @@ _watchGroup = createGroup OPFOR;
 
 //Spawn foot patrols
 _patrolGroups = [];
-
 _patrolCount = 2;
 for "_i" from  1 to (round (_strength*(_patrolCount))) do {
     _patrolGroup = createGroup OPFOR;

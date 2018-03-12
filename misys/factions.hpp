@@ -60,4 +60,7 @@ class CfgMgrifFactions {
 	
 	class Fia:BaseFaction {
 	};
+	
+	#include "factions\csat.hpp"
+	
 };
