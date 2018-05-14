@@ -82,7 +82,10 @@ if(count (_compSizes) > 0) then {
 		_compCustom = [_pos, _dir, _compPos, _compDir, _faction, _strength, _compObjs] call call compile getText (MGRIF_CONFIGROOT >> "CfgMisysCompoundComponents" >> (_comps select _forEachIndex) >> "function");
 		//Set up provided
 		
+		//add local patrols
 		{((_provided select 0) select _forEachIndex) append _x } forEach (_compCustom select 0);
+		
+		//add provided groups to groups provided by compound
 		{(_provided select _x) append (_compCustom select _x)} forEach [1,2];
 		// 
 		

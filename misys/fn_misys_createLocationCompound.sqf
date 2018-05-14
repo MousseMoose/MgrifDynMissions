@@ -127,21 +127,8 @@ _thresholdPositions = [];
 
 {
 	_group = _x;
-	
-	/*
-	_count = count _threshold;
-	{
-		//hint str [position (_x select 0),3];
-		_wp = _group addWaypoint [position (_x select 0),3];
-		if(_forEachIndex == _count) then {
-			_wp setWaypointType "CYCLE";
-		};
-	} foreach _threshold;
-	*/
-	
 	[_group,_thresholdPositions] call mgrif_fnc_misys_patrolFromPositions;
 	reverse _thresholdPositions;
-
 } forEach _groups;
 
 

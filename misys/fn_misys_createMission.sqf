@@ -18,88 +18,19 @@
 params [
 	["_pos",[0,0,0]],
 	["_faction","Fia"],
+	["_compounds",[]],
 	["_objectives",["Eliminate"]]
 ];
 
 _missionGroup = createGroup sideLogic;
 _mission = (createGroup sideLogic) createUnit ["LOGIC", _pos, [], 0, "NONE"];
-//p3 = _mission;
 
 private ["_positions","_compoundPos","_compounds","_compound","_taskNames", "_taskName","_provided"];
-_positions = [];
-_blackList = [];
-_patrolPoints = [];
-
 //create Compounds
-_locations = [_pos,["NameCity","NameCityCapital","NameVillage"],2000,500] call mgrif_fnc_misys_nearestLocationsLimits;
-_compounds = [];
-
-//for "_i" from 1 to (round random count _objectives) do 
-{
-	_compoundPos = [];
-	//_compound = [];
-	if(random 1 < 0.3 && (count _locations >0)) then {
-		_locationIndex = round random ((count _locations)-1);
-		_location = _locations select _locationIndex;
-		_locations deleteAt _locationIndex;
-		
-		_compoundPos =  [_location] call mgrif_fnc_misys_locationPositionVaried;
-		_patrolPoints pushBack ([_compoundPos,2,250,false] call mgrif_fnc_misys_safePosCompound); 
-		_compounds pushBack [([_compoundPos,_faction,55] call mgrif_fnc_misys_createLocationCompound),_compoundPos];
-		
-		
-		
-		
-	} else {
-		_compoundPos = [_pos, 500, 2000, 33, 0, 0.06, 0,_blackList] call BIS_fnc_findSafePos;
-		_patrolPoints pushBack ([_compoundPos,2,MISYS_COMPOUNDSIZE_MAX,false] call mgrif_fnc_misys_safePosCompound);
-		// make array 3 dimensional
-		_compoundPos pushback 0;
-		_blackList pushback [_compoundPos,250];
-		
-		_configSize = [(MGRIF_CONFIGROOT >> "CfgMisysCompounds")] call mgrif_fnc_misys_selectRandomConfig;
-		_configCompound = [_configSize] call mgrif_fnc_misys_selectRandomConfig;
-		
-		_compoundComponents = getArray (_configCompound >> "components");
-		_componentTypes = [];
-		{
-			_componentTypes pushBack (selectRandom getArray (MGRIF_CONFIGROOT >> "CfgMisysCompoundComponents" >> ("available" + _x)));
-			
-		} forEach _compoundComponents;
-		_compound = [configName _configCompound,configName _configSize,_compoundPos, random 359,_faction,_componentTypes] call mgrif_fnc_misys_createCompound;
-		_compounds pushBack [_compound,_compoundPos];
-		
-		
-		
-	};
-	
-	createMarker [str _compoundPos, _compoundPos];
-	(str _compoundPos) setMarkerType "flag_FIA";
-} forEach _objectives;
-
+_positions = [];
 _taskNames = [];
 
-//Set up patrols
-
-{	
-	
-	_provided = ((_x select 0) select 2);
-	_providedGroups = _provided select 0;
-	_compoundPos = _x select 1;
-	//local Patrols
-	
-	
-	{
-		
-		_ptPointsTemp = _patrolPoints call bis_fnc_arrayShuffle;
-		[_x,_ptPointsTemp] call mgrif_fnc_misys_patrolFromPositions;
-	} forEach (_providedGroups select 1);
-} forEach _compounds;
-
-
 {
-	//test1 = _compounds;
-	
 	_compoundComposite = selectRandom _compounds;
 	_compound = (_compoundComposite select 0) select 0;
 	_compoundPos = _compoundComposite select 1;
@@ -115,9 +46,7 @@ _taskNames = [];
 	_taskNames pushBack _taskName;
 	[_compoundPos, _faction,_compound,_mission,_taskName] call call compile _objective;
 	
-    //createMarker [str _compoundPos, _compoundPos];
-	//(str _compoundPos) setMarkerType "flag_FIA";
 	_positions pushBack _compoundPos;
 } forEach _objectives;
 
-[_positions,_taskNames, _compounds, _mission];
+[_positions, _taskNames, _mission]

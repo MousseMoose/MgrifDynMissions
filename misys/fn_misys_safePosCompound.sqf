@@ -3,7 +3,8 @@ params [
 		["_pos",[]],
 		["_minObjDist",0],
 		["_compoundSize",33],
-		["_in",false]
+		["_in",false],
+		["_default",[]]
 	];	
 
 private ["_min","_max"];
@@ -14,9 +15,9 @@ if(_in) then {
 	_max = _compoundSize;
 } else {
 	_min = _compoundSize;
-	_max = 50;
+	_max = _compoundSize * 1.5;
 };
 
 
-_safePos = [_pos, _min, _max, _minObjDist, 0, 0.5, 0,[]] call BIS_fnc_findSafePos;
-_safePos;
+_safePos = [_pos, _min, _max, _minObjDist, 0, 0.5, 0,[],_default] call BIS_fnc_findSafePos;
+_safePos

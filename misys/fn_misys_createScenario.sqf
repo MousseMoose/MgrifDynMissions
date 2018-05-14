@@ -26,8 +26,10 @@ _objectives = [];
 for "_i" from 1 to _objCount do {
 	_objectives pushBack (configName ([MGRIF_CONFIGROOT >> "CfgMisysObjectives"] call mgrif_fnc_misys_selectRandomConfig ));
 };
-
-_mission = [_pos,_faction,_objectives] call mgrif_fnc_misys_createMission;
+//hint str _objectives;
+_compounds =[_pos,_faction,_objCount,true] call mgrif_fnc_misys_createAO;
+_mission = [_pos,_faction,_compounds,_objectives] call mgrif_fnc_misys_createMission;
+//if(true) exitWith{};
 _positions =  _mission select 0;
 _tnames = _mission select 1;
 
@@ -46,6 +48,7 @@ _tnames = _mission select 1;
 		} forEach _tnames;
 		
 		if(_missionDone) then {
+			//does _missionInProgess = !_missionDone; have the same effect?
 			_missionInProgress = false;
 		};
 		

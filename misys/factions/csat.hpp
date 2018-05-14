@@ -1,4 +1,3 @@
-
 class Csat {
 	unit = "O_Soldier_F";
 	headgear[] = {};	

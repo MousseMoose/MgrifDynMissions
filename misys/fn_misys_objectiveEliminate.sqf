@@ -33,7 +33,7 @@ _unit addEventHandler ["Killed", {
 	deleteMarker (str (_this select 0));
 }];
 
-p3 = position _unit;
+//p3 = position _unit;
 createMarker [str _unit, _pos];
 [_taskName, true, ["", "Eliminate the Officer", str _unit], _unit, "AUTOASSIGNED",0,true] call BIS_fnc_setTask;
 _group;

@@ -15,6 +15,7 @@ class CfgMisysCompounds {
 
 class CfgMisysCompoundComponents {
 	
+	//Todo: statically generate availables in init
 	availableS5[] = {"Garage","Props","Garrison"};
 	availableS7p5[] = {"Garage","Props","Garrison"};
 	availableS10[] = {"Garage","Props","Garrison","Helipad","Medical"};

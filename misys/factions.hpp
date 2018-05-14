@@ -20,6 +20,10 @@ class CfgMgrifFactions {
 		availableStandardLoadouts[] = {"rifleman","marksman","machinegunner","medic","lat","grenadier"};
 		standardLoadoutWeights[] = {1,0.1,0.1,0.1,0.1,0.1};
 		
+		locationCompoundChance = 0.2;
+		compoundSizeTypes[] = {"S33"};
+		compoundSizeDistribution[] = {1};
+		
 		chanceCarsTurret = 0.25;
 		chanceArmor = 0.05;
 		
@@ -62,5 +66,8 @@ class CfgMgrifFactions {
 	};
 	
 	#include "factions\csat.hpp"
+	#include "factions\aaf.hpp"
+	#include "factions\nato.hpp"
+	
 	
 };

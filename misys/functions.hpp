@@ -2,6 +2,7 @@ class misys {
 	file = "misys";
 	class misys_createScenario {};
 	class misys_createMission {};
+	class misys_createAO {};
 	class misys_createCompound {};
 	class misys_createComposition {};
 	class misys_createLocationCompound {};
@@ -13,6 +14,8 @@ class misys {
 	class misys_createVehicle {};
 	
 	class misys_occupyBuilding {};
+	
+	class misys_AOManagerDefault {};
 	
 	
 	class misys_componentGarrison {};
