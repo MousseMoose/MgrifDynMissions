@@ -16,6 +16,8 @@ class misys {
 	class misys_occupyBuilding {};
 	
 	class misys_AOManagerDefault {};
+	class misys_knownAOTargets {};
+	class misys_groupAOTargets {};
 	
 	
 	class misys_componentGarrison {};
@@ -36,4 +38,4 @@ class misys {
 	class misys_safePosCompound {};
 	class misys_patrolFromPositions {};
 	
-		};
+};

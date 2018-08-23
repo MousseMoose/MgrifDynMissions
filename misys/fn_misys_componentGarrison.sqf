@@ -6,6 +6,8 @@
 #define MISYS_COMPS 	5
 #define MGRIF_CONFIGROOT missionconfigFile
 
+#include "MacrosGarrison.hpp"
+
 params [
 	["_pos",[]],
 	["_dir",0],
@@ -13,7 +15,8 @@ params [
 	["_compDir",0],
 	["_faction","Fia"],
 	["_strength",1],
-	["_compObjs",[]]
+	["_compObjs",[]],
+	["_compNames",[]]
 ];
 //if(count (_compObjs select MISYS_BUILDINGS)>0) then {
 	//hint str (_compObjs select MISYS_BUILDINGS) ;
@@ -59,14 +62,8 @@ _lrPatrolGrp = [count units _group,_lrPatrolPos, _faction] call mgrif_fnc_misys_
 
 
 
-//[Objects/Props,Groups,Vehicles]
-[
-	[
-		[_group],
-		[_lrPatrolGrp],
-		[]
-	],
-	[],
-	[]
-]
-	
+private _garrisonForces = MGRIF_MISYS_GARRISONTEMPLATE;
+
+private _vehicles = [];
+private _props = [];
+[_garrisonForces,_vehicles,_props]

@@ -21,7 +21,18 @@ class AAF {
 		class I_MRAP_03_F {
 			textures[] = {};
 		};
-	}
+	};
+	
+	class trucks {
+		class I_Truck_02_covered_F {
+			textures[] = {};
+		};
+
+		class I_Truck_02_transport_F {
+			textures[] = {};
+		};
+	};
+	
 	class carsTurret {
 		class I_MRAP_03_hmg_F {
 			textures[] = {};

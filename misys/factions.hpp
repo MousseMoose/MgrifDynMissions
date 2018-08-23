@@ -20,9 +20,9 @@ class CfgMgrifFactions {
 		availableStandardLoadouts[] = {"rifleman","marksman","machinegunner","medic","lat","grenadier"};
 		standardLoadoutWeights[] = {1,0.1,0.1,0.1,0.1,0.1};
 		
-		locationCompoundChance = 0.2;
-		compoundSizeTypes[] = {"S33"};
-		compoundSizeDistribution[] = {1};
+		
+		aoGenerator = "mgrif_fnc_misys_createAO";
+		aoManager = "mgrif_fnc_misys_AOManagerDefault";
 		
 		chanceCarsTurret = 0.25;
 		chanceArmor = 0.05;
@@ -32,10 +32,18 @@ class CfgMgrifFactions {
 				textures[] = {};
 			};
 		}
+		
 		class carsTurret {
 			class O_G_Offroad_01_armed_F {
 				textures[] = {};
 			};
+		};
+		
+		class trucks {
+			class I_G_Van_01_transport_F {
+				textures[] = {};
+			};
+			
 		};
 		
 		class armorTransport{

@@ -1,64 +1,56 @@
 //AI Commander - Default
 #define MGRIF_MISYS_AO_SIZE 2000
 #define MGRIF_MISYS_DETECTION_THRESHOLD 0.4
+
+#define MGRIF_MISYS_COMPOUNDPOS(arr) ((arr) select 1)
+#define MGRIF_MISYS_COMPOUNDOBJECTS(arr) (((arr) select 0) select 0)
+
+#include "MacrosCompounds.hpp"
+#include "MacrosGarrison.hpp"
+
 params [
 	["_center",[0,0,0]],
 	["_faction","FIA"],
 	["_compounds",[]],
-	["_provided",[]]
+	["_garrisonForces",MGRIF_MISYS_GARRISONTEMPLATE]
 ];
+
+_officerPos = [0,0,0];
+_compound = selectRandom _compounds;
+if(count (MGRIF_MISYS_COMPOUNDOBJECTS(_compound)#MISYS_BUILDINGS) > 0) then {
+	_building = selectRandom (MGRIF_MISYS_COMPOUNDOBJECTS(_compound)#MISYS_BUILDINGS);
+	_buildingPos = selectRandom (_building buildingPos -1);
+	_officerPos = _buildingPos;
+} else {
+	_officerPos = MGRIF_MISYS_COMPOUNDPOS(_compound);
+};
+
+
 _officer =	[
       			'officer',
       			createGroup opfor,
-     			_center,
+     			_officerPos,
                 _faction
                 ] call mgrif_fnc_misys_createUnit;
-_officer setCaptive true;
-_officer disableAI "ALL";
+				
+
+
 while {alive _officer} do {
 	if(_officer getVariable ["mgrif_var_misys_canCommunicate",true]) then {
-		_targets = [];
 		//TODO: remove empty provided groups
+		
+		//
+		_availableTroops = MGRIF_MISYS_SQUADS(_garrisonForces) + MGRIF_MISYS_MOTORISEDARMED(_garrisonForces);
+		p1 = _availableTroops;
 		
 		
 		//calculate known targets within AO
-		{
-			if((_x distance _center ) < MGRIF_MISYS_AO_SIZE && (OPFOR knowsAbout _x) > MGRIF_MISYS_DETECTION_THRESHOLD) then {
-				_targets pushBack _x;
-				hint str _x;
-				
-			};
-		} forEach allPlayers;
+		_targets = [_center,MGRIF_MISYS_AO_SIZE,MGRIF_MISYS_DETECTION_THRESHOLD] call mgrif_fnc_misys_knownAOTargets;
+		//diag_log ("targets " + str _targets);
+		_targetValues = [_targets,100] call mgrif_fnc_misys_groupAOTargets;
+		//diag_log ("targetValues " + str _targetValues);
 		
-		
-		//calculate localised target "groups" as players might not be in a logical group
-		_targetValues = [];
-		_currentIndex = 0;
-		_max = count _targets;
 
-		//group players within 100 meters, assign cummulative value
-		while{_currentIndex < _max} do {
-			_currentTargets = + _targets; 
-			_currentTargets deleteAt _currentIndex;
-			_currentTarget = _targets#_currentIndex;
-			_toDelete = [];
-			//_targetValue = [_currentTarget] call mgrif_fnc_misys_targetValue;
-			
-			{
-				if ( _x distance _currentTarget < 100 ) then {
-					//_targetValue = _targetValue + [_x] call mgrif_fnc_misys_targetValue;
-					_toDelete pushBack _forEachIndex;
-				};
-			} forEach _currentTargets;
-			
-			{
-				_targets deleteAt (_x+1);
-				
-			} forEach _toDelete;
-			//_targetValues pushBack _targetValue;
-			_max = _max - (count _toDelete);
-			_currentIndex = _currentIndex + 1;
-		};
 		
 		
 		{
@@ -78,7 +70,7 @@ while {alive _officer} do {
 				};
 				
 				
-			} forEach (_provided#0#1);
+			} forEach _availableTroops;//(_provided#0#1);
 			
 			
 			if(_available) then {
@@ -91,5 +83,5 @@ while {alive _officer} do {
 		
 		
 	};
-	uisleep 60;
+	uisleep 30;
 };

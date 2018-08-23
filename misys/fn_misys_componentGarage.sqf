@@ -7,6 +7,8 @@
 #define MISYS_SPECIAL 	5
 #define MGRIF_CONFIGROOT missionConfigFile
 
+#include "MacrosGarrison.hpp"
+
 
 params [
 	["_pos",[]],
@@ -15,7 +17,9 @@ params [
 	["_compDir",0],
 	["_faction","Fia"],
 	["_strength",1],
-	["_compObjs",[]]
+	["_compObjs",[]],
+	["_compTypes",[]],
+	["_compSizes",[]]
 ];
 
 private ["_config","_veh", "_vehs"];
@@ -41,26 +45,25 @@ _groups = [];
 
 _config = (MGRIF_CONFIGROOT >> "CfgMgrifFactions" >> _faction  >> "cars");
 _mountedPatrols = [];
+_carClass = "carsTurret";
+
+
+//if("Garrison" in _compTypes) then {
+//	_carClass = "truck";
+//};
 
 {
 	_config = (MGRIF_CONFIGROOT >> "CfgMgrifFactions" >> _faction  >> "carsTurret");
 	if(count _config  > 0) then {
 		_mppos = [_pos, 4,33,false] call mgrif_fnc_misys_safePosCompound;
-		_veh = [_faction,"carsTurret",_mppos,true] call mgrif_fnc_misys_createVehicle;
+		_veh = [_faction,_carClass,_mppos,true] call mgrif_fnc_misys_createVehicle;
 		_mpgrp = group ((crew _veh) select 0);
 		_mountedPatrols pushBack _mpgrp;
 	};
 } forEach [1];
 
-//out of base
-// [Groups, loot vehicles, props]
-// groups: [Local Compound Patrols, AO Patrols,Special groups]
-[
-	[
-		[],
-		_mountedPatrols,
-		[]
-	],
-	_vehs,
-	[]
-]
+private _garrisonForces = MGRIF_MISYS_GARRISONTEMPLATE;
+MGRIF_MISYS_MOTORISEDARMED(_garrisonForces) append _mountedPatrols;
+private _vehicles = [];
+private _props = [];
+[_garrisonForces,_vehicles,_props]

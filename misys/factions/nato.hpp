@@ -32,6 +32,16 @@ class Nato {
 		};
 	};
 	
+	class trucks {
+		class B_Truck_01_transport_F {
+			textures[] = {};
+		};
+		
+		class B_Truck_01_covered_F {
+			textures[] = {};
+		};
+	};
+	
 	class armorTransport{
 		
 	};

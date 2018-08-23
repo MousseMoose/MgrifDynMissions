@@ -32,6 +32,24 @@ class Csat {
 		};
 	};
 	
+	class trucks {
+		class O_Truck_02_covered_F {
+			textures[] = {};
+		};
+		
+		class O_Truck_02_transport_F {
+			textures[] = {};
+		};
+		
+		class O_Truck_03_transport_F {
+			textures[] = {};
+		};
+		
+		class O_Truck_03_covered_F {
+			textures[] = {};
+		};
+	};
+	
 	class armorTransport{
 		
 	};

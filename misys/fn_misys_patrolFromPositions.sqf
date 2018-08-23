@@ -12,6 +12,6 @@ _group setFormation "COLUMN";
 {
 	_wp = _group addWaypoint [_x,3];
 } foreach _positions;
-_waypoints = (waypoints _group);
-_wp = _waypoints select ((count _waypoints) -1);
+_wp = _group addWaypoint [ position leader _group,0];
 _wp setWaypointType "CYCLE";
+deleteWaypoint [_group,0];

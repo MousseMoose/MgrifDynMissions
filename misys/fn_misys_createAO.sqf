@@ -6,6 +6,8 @@
 #define MGRIF_FACTION_TRAIT(FAC,TRAIT) (MGRIF_CONFIGROOT >> "cfgMgrifFactions" >> FAC >> TRAIT)
 #define MGRIF_CONFIGROOT missionconfigFile
 
+#include "MacrosGarrison.hpp"
+
 params[
 	["_center",[0,0,0]],
 	["_faction","FIA"],
@@ -54,11 +56,11 @@ for "_i" from 1 to _compoundCount do {
 	(str _compoundPos) setMarkerType "flag_FIA";
 };
 
-p2 = _patrolPoints;
-	{
-		_mrk = createMarker [str  _x, _x ];
-		_mrk setMarkerType "flag_FIA"
-	} forEach _patrolPoints;
+//p2 = _patrolPoints;
+{
+	_mrk = createMarker [str  _x, _x ];
+	_mrk setMarkerType "flag_FIA"
+} forEach _patrolPoints;
 
 _allProvided = 
 [
@@ -71,8 +73,17 @@ _allProvided =
 	[] //props
 ];
 
+_allGarrisonForces = MGRIF_MISYS_GARRISONTEMPLATE;
+{
+	_garrisonForces = (_x#0)#2;
+	{
+			_current = _x;
+			_currentIndex = _forEachIndex;
+			{(((_allGarrisonForces)#_currentIndex)#_forEachIndex) append _x} forEach _current;
+	} forEach _garrisonForces;
+} forEach _compounds;
 
-{	
+/*{	
 	_provided = ((_x select 0) select 2);
 	
 	_allProvided#0#0 append _provided#0#0;
@@ -94,9 +105,9 @@ _allProvided =
 		//workaround to fix bug that has mounted patrols not move until interacted with
 		if(vehicle leader _x != leader _x) then {doGetOut units _x};
 	} forEach (_providedGroups select 1);
-} forEach _compounds;
+} forEach _compounds;*/
 
-[_center,"FIA",_compounds,_allProvided] spawn mgrif_fnc_misys_AOManagerDefault;
+[_center,_faction,_compounds,_allGarrisonForces,_patrolPoints] spawn mgrif_fnc_misys_AOManagerDefault;
 
 //TODO - link components/compounds
 

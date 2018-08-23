@@ -7,6 +7,8 @@
 #define MISYS_SPECIAL 	5
 #define MGRIF_CONFIGROOT missionConfigFile
 
+#include "MacrosGarrison.hpp"
+
 //Provided params
 params [
 	["_pos",[]],
@@ -19,16 +21,8 @@ params [
 ];
 
 
-//returns an array with spawned groups and objects
-// [Groups, loot vehicles, props]
-// groups: [Local Compound Patrols, AO Patrols,Special groups]
-// loot vehicles: array of claimable vehicles
-[
-	[
-		[],		//local patrols
-		[], //AO Patrols
-		[] // Special Groups
-	],
-	[], //loot vehicles
-	[] //props
-]
+
+private _garrisonForces = MGRIF_MISYS_GARRISONTEMPLATE;
+private _vehicles = [];
+private _props = [];
+[_garrisonForces,_vehicles,_props]

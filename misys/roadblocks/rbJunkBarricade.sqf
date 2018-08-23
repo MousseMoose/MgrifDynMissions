@@ -32,7 +32,3 @@
 	[]
 	
 ]
-/*
-p1 = nearestLocation [position player, "NameCity"]; [p1] call mgrif_fnc_misys_createLocationCompound;
- p2 = call compile preprocessFile  "misys\roadblocks\rbJunkBarricade.sqf"
-*/

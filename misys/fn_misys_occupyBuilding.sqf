@@ -24,7 +24,7 @@ _bpos = (_x buildingPos -1);
 	};
 } foreach _bpos;
 
-_buildingGroup;
+_buildingGroup
 
 
 

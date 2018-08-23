@@ -7,6 +7,8 @@
 #define MISYS_SPECIAL 	5
 #define MGRIF_CONFIGROOT missionConfigFile
 
+#include "MacrosGarrison.hpp"
+
 
 params [
 	["_pos",[]],
@@ -15,7 +17,8 @@ params [
 	["_compDir",0],
 	["_faction","Fia"],
 	["_strength",1],
-	["_compObjs",[]]
+	["_compObjs",[]],
+	["_compNames",[]]
 ];
 
 private ["_config","_veh", "_vehs"];
@@ -35,12 +38,7 @@ _config = (MGRIF_CONFIGROOT >> "CfgMgrifFactions" >> _faction  >> "helicoptersTr
 } foreach (_compObjs select MISYS_SPECIAL);
 
 
-[
-	[
-		[],
-		[],
-		[]
-	],
-	_vehs,
-	[]
-]
+private _garrisonForces = MGRIF_MISYS_GARRISONTEMPLATE;
+private _vehicles = [];
+private _props = [];
+[_garrisonForces,_vehicles,_props]
