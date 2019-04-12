@@ -1,4 +1,4 @@
-#define MUCONFIGROOT missionConfigFile
+#define MGRIF_CONFIGROOT missionConfigFile
 params [
 		["_pos",""],
 		["_classes",[]],

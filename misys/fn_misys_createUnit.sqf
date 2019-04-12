@@ -1,4 +1,4 @@
-#define MUCONFIGROOT missionConfigFile
+#define MGRIF_CONFIGROOT missionConfigFile
 
 
 /*_class = _this select 0;
@@ -14,8 +14,8 @@ params [["_class","rifleman"],
 
 
 
-_unit = _group createUnit [getText ( MUCONFIGROOT >> 'CfgMgrifFactions' >> _faction >> 'unit') ,_pos,[],0,"CAN_COLLIDE"];
-_unit setUnitLoadout getArray (MUCONFIGROOT >> 'CfgMgrifFactions' >> _faction >> _class);
+_unit = _group createUnit [getText ( MGRIF_CONFIGROOT >> 'CfgMgrifFactions' >> _faction >> 'unit') ,_pos,[],0,"CAN_COLLIDE"];
+_unit setUnitLoadout getArray (MGRIF_CONFIGROOT >> 'CfgMgrifFactions' >> _faction >> _class);
 [_unit] join _group; 
 _unit
 

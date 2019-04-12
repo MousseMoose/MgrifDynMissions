@@ -6,6 +6,9 @@ class misys {
 	class misys_createCompound {};
 	class misys_createComposition {};
 	class misys_createLocationCompound {};
+	class misys_createCompoundComponents {};
+	class misys_createCompoundComponent {};
+	class misys_initCompoundComponents {};
 	
 	
 	class misys_createUnit {};
@@ -31,11 +34,14 @@ class misys {
 	class misys_ObjectiveIntel {};
 	
 	class misys_configEmpty {};
+	class misys_findSafePosReal {};
 	class misys_selectRandomConfig {};
 	class misys_selectRandomConfigLimits {};
 	class misys_nearestLocationsLimits {};
 	class misys_LocationPositionVaried {};
 	class misys_safePosCompound {};
 	class misys_patrolFromPositions {};
+	
+	
 	
 };

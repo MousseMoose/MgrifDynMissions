@@ -1,4 +1,4 @@
-#define MUCONFIGROOT missionConfigFile
+#define MGRIF_CONFIGROOT missionConfigFile
 params [
 		["_pos",[]],
 		["_minObjDist",0],
@@ -19,5 +19,5 @@ if(_in) then {
 };
 
 
-_safePos = [_pos, _min, _max, _minObjDist, 0, 0.5, 0,[],_default] call BIS_fnc_findSafePos;
+_safePos = [_pos, _min, _max, _minObjDist, 0, 0.5, 0,[],_default] call mgrif_fnc_misys_findSafePosReal;
 _safePos

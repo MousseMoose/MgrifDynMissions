@@ -18,23 +18,23 @@ params [
 	["_compObjs",[]],
 	["_compNames",[]]
 ];
-//if(count (_compObjs select MISYS_BUILDINGS)>0) then {
-	//hint str (_compObjs select MISYS_BUILDINGS) ;
-//};
 
 private ["_group","_unit"];
 
 
 
 
+
+
+
+
+/*
 _buildingCount = 0;
 _group = createGroup OPFOR;
-
-
 {
+	
 	_pos = _pos vectorAdd [random 1, random 1,0];
 	
-	//at least one soldier per building because tents
 	_unit = [
 		_group,
 		_pos vectorAdd [0.1*(_forEachIndex),0.1*_buildingCount,0],
@@ -55,14 +55,20 @@ _group = createGroup OPFOR;
 	_buildingCount = _buildingCount + 1;
 	
 } forEach (_compObjs select MISYS_BUILDINGS);
+*/
+
+_bposCount = 0;
+{
+	_bposCount = _bposCount + count (_x buildingPos -1);
+} forEach (_compObjs select MISYS_BUILDINGS);
+_bposCount = _bposCount * ((random 0.5) + 0.5);
 
 _lrPatrolPos = [_pos,2,33,false] call mgrif_fnc_misys_safePosCompound;
 _lrPatrolPos set [2,0];
-_lrPatrolGrp = [count units _group,_lrPatrolPos, _faction] call mgrif_fnc_misys_createInfantryGroup;
-
-
+_lrPatrolGrp = [_bposCount,_lrPatrolPos, _faction] call mgrif_fnc_misys_createInfantryGroup;
 
 private _garrisonForces = MGRIF_MISYS_GARRISONTEMPLATE;
+MGRIF_MISYS_SQUADS(_garrisonForces) pushback _lrPatrolGrp;
 
 private _vehicles = [];
 private _props = [];

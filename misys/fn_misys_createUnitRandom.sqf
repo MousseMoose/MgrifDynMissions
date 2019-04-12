@@ -1,4 +1,4 @@
-#define MUCONFIGROOT missionConfigFile
+#define MGRIF_CONFIGROOT missionConfigFile
 
 
 /*_class = _this select 0;
@@ -12,7 +12,7 @@ params [
 
 
 
-_class = (getArray (MUCONFIGROOT >> "CfgMgrifFactions" >> _faction >> "availableStandardLoadouts")) selectRandomWeighted  (getArray (MUCONFIGROOT >> "CfgMgrifFactions" >> _faction >>"standardLoadoutWeights"));
+_class = (getArray (MGRIF_CONFIGROOT >> "CfgMgrifFactions" >> _faction >> "availableStandardLoadouts")) selectRandomWeighted  (getArray (MGRIF_CONFIGROOT >> "CfgMgrifFactions" >> _faction >>"standardLoadoutWeights"));
 _unit = [_class, _group, _pos, _faction] call mgrif_fnc_misys_createUnit;
 _unit
 

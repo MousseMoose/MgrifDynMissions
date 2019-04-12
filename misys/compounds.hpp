@@ -149,6 +149,27 @@ class CfgMisysCompoundComponents: Mgrif_CompoundComponentConfig {
 	};
 };
 
+class CfgMisysCompoundAuxillaries: Mgrif_CompoundComponentConfig {
+	class Motorpool:Mgrif_CompoundComponentType {
+		function = "mgrif_fnc_misys_componentGarage";
+		class S20:Mgrif_CompoundComponentSize {
+			class Car:Mgrif_CompoundComponent {
+				file = "misys\components\s20Motorpool.sqf";
+			};
+		};		
+	};
+	
+	class Garrison:Mgrif_CompoundComponentType {
+		function = "mgrif_fnc_misys_componentGarrison";
+		class S15:Mgrif_CompoundComponentSize {
+			class Houses:Mgrif_CompoundComponent {
+				file = "misys\components\s15GarrisonCargo.sqf";
+			};
+		};
+	};
+};
+
+
 
 class CfgMisysRoadblocks {
 	class JunkBarricade {

@@ -15,10 +15,12 @@ params [
 	["_pos",0],
 	["_dir",0],
 	["_faction","FIA"],
-	["_comps",[]],
+	["_compTypes",[]],
 	["_compNames", []],
 	["_strength", 1],
-	["_radius", 33]
+	["_radius", 33],
+	["_auxTypes",[]],
+	["_auxNames", []]
 ];
 
 
@@ -38,8 +40,8 @@ if((count _compNames) == 0) then {
 	{_compNames pushback "rand"} foreach _compSizes;
 };
 
-_compReturns = [];
 
+//DEPRECATED
 _provided = 
 [
 	[
@@ -55,54 +57,93 @@ _garrisonForces = MGRIF_MISYS_GARRISONTEMPLATE;
 _vehicles = [];
 _props = [];
 
+_compPositions =  (_compound select MISYS_COMPS) apply {position _x};
+_compTokens = (_compound select MISYS_COMPS);
+_components = [];
 
-if(count (_compSizes) > 0) then {
-	
+{
+	_compToken = _compTokens#_forEachIndex;
+	_component = [
+		position _compToken,
+		getDir _compToken,
+		_compTypes#_forEachIndex,
+		_compSizes#_forEachIndex,
+		_compNames#_forEachIndex,
+		_faction,
+		_strength,
+		false
+	] call mgrif_fnc_misys_createCompoundComponent;
+	_compNames set [_forEachIndex,_component#0];
+	_components pushBack (_component#1);
+} forEach _compTypes;
+
+
+_auxTypes = ["Garrison","Motorpool"];
+_auxSizes = ["S15","S20"];
+_realSizes = _auxSizes apply {call compile  ((_x splitString "S")#0)};
+_auxNames = ["rand","rand"];
+_auxPositions = [];
+_auxillaries = [];
+
+{
+	//TODO: verify auxPositions aren't default
+	_auxPosition = [_pos, _radius + 7, _radius + (_realSizes#_forEachIndex) + 7, (_realSizes#_forEachIndex) + 2, 0, 0.5, 0,[],[]] call mgrif_fnc_misys_findSafePosReal;
+	_auxPositions pushBack _auxPosition;
+	_auxillary = [
+		_auxPosition,
+		_auxPosition getDir _pos,
+		_auxTypes#_forEachIndex,
+		_auxSizes#_forEachIndex,
+		_auxNames#_forEachIndex,
+		_faction,
+		_strength,
+		true
+	] call mgrif_fnc_misys_createCompoundComponent;
+	_auxillaries pushBack (_auxillary#1);
+} forEach _auxTypes;
+
+
+_customs = [];
+
+//initialise Compound
+
+{
+	_compToken = _compTokens#_forEachIndex;
+	_compCustom = [_pos, _dir, position _compToken, getDir _compToken, _faction, _strength, _components#_forEachIndex,_compTypes + _auxTypes,_compSizes + _auxSizes] call call compile getText (MGRIF_CONFIGROOT >> "CfgMisysCompoundComponents" >> _x >> "function");
+	_customs pushback _compCustom;
+} forEach _compTypes;
+
+testtypes = [_compTypes,_compNames];
+
+{
+	_auxPosition = _auxPositions#_forEachIndex;
+	_auxCustom = [_pos, _dir, _auxPosition,_auxPosition getDir _pos, _faction, _strength, _auxillaries#_forEachIndex,_compTypes + _auxTypes,_compSizes + _auxSizes] call call compile getText (MGRIF_CONFIGROOT >> "CfgMisysCompoundAuxillaries" >> _x >> "function");
+	/*if (isNil "_auxCustom") then {
+		CopyToClipboard str [_pos, _dir, _auxPosition,_auxPosition getDir _pos, _faction, _strength, _auxillaries#_forEachIndex,_compTypes + _auxTypes,_compSizes + _auxSizes];
+		hint getText (MGRIF_CONFIGROOT >> "CfgMisysCompoundAuxillaries" >> _x >> "function");
+	};*/
+	_customs pushback _auxCustom;
+} forEach _auxTypes;
+
+
+
+{	
+	_custom = _x;
 	{
-		if(_x == "rand") then {
-			_comp = (MGRIF_CONFIGROOT >> "CfgMisysCompoundComponents" >> (_comps select _forEachIndex) >> (_compSizes select _forEachIndex)) ;
-			_compNames set [_forEachIndex,configName ([_comp] call mgrif_fnc_misys_selectRandomConfig)];
-		};
-	} forEach _compNames;
-	
+		private _current = _x;
+		private _currentIndex = _forEachIndex;
+		{(((_garrisonForces)#_currentIndex)#_forEachIndex) append _x} forEach _current;
+	} forEach (_custom#0);
+} forEach _customs;
 
+//add component and auxillary objects to compound objects
+{
+	_current = _x;
 	{
-		_comp = (MGRIF_CONFIGROOT >> "CfgMisysCompoundComponents" >> (_comps select _forEachIndex) >> _x);
-		_compPos = position ((_compound select MISYS_COMPS) select _forEachIndex);
-		_compDir = getDir ((_compound select MISYS_COMPS) select _forEachIndex);
-		
-		_compName = _compNames select _forEachIndex;
-		_compFile = "";
-		_compConfig = "";
-		
-		_compConfig = (_comp >> _compName);
-		
-		_compFile = getText (_compConfig >> "file");
-		_compObjs = [
-						_compFile,
-						_compPos,
-						_compDir
-					] call mgrif_fnc_misys_createComposition;
-		_compCustom = [_pos, _dir, _compPos, _compDir, _faction, _strength, _compObjs,_comps,_compSizes] call call compile getText (MGRIF_CONFIGROOT >> "CfgMisysCompoundComponents" >> (_comps select _forEachIndex) >> "function");
-
-		{
-			private _current = _x;
-			private _currentIndex = _forEachIndex;
-			{(((_garrisonForces)#_currentIndex)#_forEachIndex) append _x} forEach _current;
-		} forEach (_compCustom#0);
-		_vehicles append (_compCustom#1);
-		_props append (_compCustom#2);
-		
-
-		
-		{
-			//TODO: edge case index 0 (should remain in array, instead of just being appended)
-			(_compound select _forEachIndex) append _x;
-		} foreach _compObjs;
-	} foreach _compSizes;
+		(_compound select _forEachIndex) append _x;
+	} forEach _current;
 	
-	{deleteVehicle _x} foreach (_compound select MISYS_COMPS);
-};
+} foreach (_components + _auxillaries);
 
 //AI
 //------------------------------------------------------------------------------------------------------------
@@ -204,7 +245,7 @@ for "_i" from  1 to (round (_strength*(_patrolCount))) do {
 _groups = [[_watchGroup],_buildingGroups];
 
 MGRIF_MISYS_WATCHS(_garrisonForces) pushBack _watchGroup;
-MGRIF_MISYS_BUILDINGS(_garrisonForces) append _buildingGroups;
+MGRIF_MISYS_BUILDINGGUARDS(_garrisonForces) append _buildingGroups;
 
 
 [_compound,_groups,_garrisonForces]
