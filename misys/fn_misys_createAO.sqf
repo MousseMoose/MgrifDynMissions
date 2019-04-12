@@ -34,10 +34,15 @@ for "_i" from 1 to _compoundCount do {
 	} else {
 		//stub
 		//_size = [_faction] call mgrif_misys_fnc_getRandomCompoundSize;
-		_compoundPos = [_center, 0, 2000, MISYS_COMPOUND_SIZE_MAX , 0, 0.1, 0,_blackList,[]] call mgrif_fnc_misys_findSafePosReal;
-		_compoundPos pushback 0;
-		//p1 = str _compoundPos;
-		if((count _compoundPos) > 0) then {
+		private _tries = 0;
+		_compoundPos = [0,0,0];
+		while {count _compoundPos > 2 && _tries < 3} do {
+			_compoundPos = [_center, 0, 2000, MISYS_COMPOUND_SIZE_MAX , 0, 0.1, 0,_blackList,[]] call mgrif_fnc_misys_findSafePosReal;
+			_tries = _tries + 1;
+		};
+		
+		if( count _compoundPos<3) then {
+			_compoundPos pushback 0;
 			_blackList pushback [_compoundPos,250];
 			_patrolPoints pushBack ([_compoundPos,2,MISYS_COMPOUND_SIZE_MAX,false] call mgrif_fnc_misys_safePosCompound);
 			_configSize = [(MGRIF_CONFIGROOT >> "CfgMisysCompounds")] call mgrif_fnc_misys_selectRandomConfig;
@@ -50,7 +55,10 @@ for "_i" from 1 to _compoundCount do {
 			} forEach _compoundComponents;
 			_compound = [configName _configCompound,configName _configSize,_compoundPos, random 359,_faction,_componentTypes] call mgrif_fnc_misys_createCompound;
 			_compounds pushBack [_compound,_compoundPos];
+		} else {
+			diag_log "Could not create Compound: No Space";
 		};
+		
 	};
 	createMarker [str _compoundPos, _compoundPos];
 	(str _compoundPos) setMarkerType "flag_FIA";

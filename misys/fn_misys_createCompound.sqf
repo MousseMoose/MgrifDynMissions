@@ -84,23 +84,29 @@ _realSizes = _auxSizes apply {call compile  ((_x splitString "S")#0)};
 _auxNames = ["rand","rand"];
 _auxPositions = [];
 _auxillaries = [];
-
+_auxPosCount = 0;
 {
 	//TODO: verify auxPositions aren't default
 	_auxPosition = [_pos, _radius + 7, _radius + (_realSizes#_forEachIndex) + 7, (_realSizes#_forEachIndex) + 2, 0, 0.5, 0,[],[]] call mgrif_fnc_misys_findSafePosReal;
-	_auxPositions pushBack _auxPosition;
-	_auxillary = [
-		_auxPosition,
-		_auxPosition getDir _pos,
-		_auxTypes#_forEachIndex,
-		_auxSizes#_forEachIndex,
-		_auxNames#_forEachIndex,
-		_faction,
-		_strength,
-		true
-	] call mgrif_fnc_misys_createCompoundComponent;
-	_auxillaries pushBack (_auxillary#1);
+	if(count _auxPosition<3) then {
+		_auxPosition pushBack 0;
+		_auxPositions pushBack _auxPosition;
+		_auxillary = [
+			_auxPosition,
+			_auxPosition getDir _pos,
+			_auxTypes#_forEachIndex,
+			_auxSizes#_forEachIndex,
+			_auxNames#_forEachIndex,
+			_faction,
+			_strength,
+			true
+		] call mgrif_fnc_misys_createCompoundComponent;
+		_auxillaries pushBack (_auxillary#1);
+		_auxPosCount = _auxPosCount+1;
+	};
+
 } forEach _auxTypes;
+_auxTypes resize _auxPosCount;
 
 
 _customs = [];
