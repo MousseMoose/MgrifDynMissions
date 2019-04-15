@@ -48,10 +48,8 @@ _mountedPatrols = [];
 _carClass = "carsTurret";
 
 
-//if("Garrison" in _compTypes) then {
-//	_carClass = "truck";
-//};
 
+/*
 {
 	_config = (MGRIF_CONFIGROOT >> "CfgMgrifFactions" >> _faction  >> "carsTurret");
 	if(count _config  > 0) then {
@@ -60,10 +58,10 @@ _carClass = "carsTurret";
 		_mpgrp = group ((crew _veh) select 0);
 		_mountedPatrols pushBack _mpgrp;
 	};
-} forEach [1];
+} forEach [1];*/
 
 private _garrisonForces = MGRIF_MISYS_GARRISONTEMPLATE;
-MGRIF_MISYS_MOTORISEDARMED(_garrisonForces) append _mountedPatrols;
+//MGRIF_MISYS_MOTORISEDARMED(_garrisonForces) append _mountedPatrols;
 private _vehicles = [];
 private _props = [];
 [_garrisonForces,_vehicles,_props]

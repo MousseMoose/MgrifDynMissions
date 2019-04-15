@@ -19,6 +19,10 @@ class misys {
 	class misys_occupyBuilding {};
 	
 	class misys_AOManagerDefault {};
+	class misys_AOManagerDefaultSetUpGroups {};
+	class misys_AOManagerDefaultRefundPoints {};
+	class misys_AOManagerDefaultCreateReinforcements {};
+	
 	class misys_knownAOTargets {};
 	class misys_groupAOTargets {};
 	
@@ -36,6 +40,7 @@ class misys {
 	class misys_configEmpty {};
 	class misys_findSafePosReal {};
 	class misys_selectRandomConfig {};
+	class misys_deleteIndices {};
 	class misys_selectRandomConfigLimits {};
 	class misys_nearestLocationsLimits {};
 	class misys_LocationPositionVaried {};

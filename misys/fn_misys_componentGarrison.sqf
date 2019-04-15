@@ -63,12 +63,12 @@ _bposCount = 0;
 } forEach (_compObjs select MISYS_BUILDINGS);
 _bposCount = _bposCount * ((random 0.5) + 0.5);
 
-_lrPatrolPos = [_pos,2,33,false] call mgrif_fnc_misys_safePosCompound;
+/*_lrPatrolPos = [_pos,2,33,false] call mgrif_fnc_misys_safePosCompound;
 _lrPatrolPos set [2,0];
-_lrPatrolGrp = [_bposCount,_lrPatrolPos, _faction] call mgrif_fnc_misys_createInfantryGroup;
+_lrPatrolGrp = [_bposCount,_lrPatrolPos, _faction] call mgrif_fnc_misys_createInfantryGroup;*/
 
 private _garrisonForces = MGRIF_MISYS_GARRISONTEMPLATE;
-MGRIF_MISYS_SQUADS(_garrisonForces) pushback _lrPatrolGrp;
+//MGRIF_MISYS_SQUADS(_garrisonForces) pushback _lrPatrolGrp;
 
 private _vehicles = [];
 private _props = [];

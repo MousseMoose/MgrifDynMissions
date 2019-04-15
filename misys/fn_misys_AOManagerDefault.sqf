@@ -23,40 +23,10 @@ params [
 mgrif_var_misys_AOManagerPoints = MGRIF_MISYS_GARRISONTEMPLATE;
 
 
+//
 
 //Set up group costs and vehicle points in group variables
-{
-	
-	_currentIndex = _forEachIndex;
-	{
-		_currentInfPoints = 0;
-		_currentVehPoints = 0;
-		{
-			_groupCost = (count units _x);
-			_vehicleCost = 0;
-			_currentInfPoints = _currentInfPoints + _groupCost;
-			
-			//hint str [vehicle leader _x != leader _x,typename leader _x, _x, typeName _x];
-			
-			if(!isNull (leader _x) && vehicle leader _x != leader _x) then {
-				_currentVehPoints = _currentVehPoints + 1;
-				_vehicleCost = 1;
-			};
-			
-			_x setVariable ["mgrif_misys_groupCost",[_groupCost,_vehicleCost]];
-			_x setVariable ["mgrif_misys_groupVehicle",vehicle leader _x];
-
-			
-		} forEach ((_garrisonForces#_currentIndex)#_forEachIndex);
-		
-		_x pushback 0;//_currentInfPoints;
-		_x pushback 0;//_currentVehPoints;
-	} forEach _x;
-	
-} forEach mgrif_var_misys_AOManagerPoints;
-
-
-
+[_garrisonForces,mgrif_var_misys_AOManagerPoints] call mgrif_fnc_misys_AOManagerDefaultSetUpGroups;
 
 
 //spawn officer
@@ -69,7 +39,6 @@ if(count (MGRIF_MISYS_COMPOUNDOBJECTS(_compound)#MISYS_BUILDINGS) > 0) then {
 } else {
 	_officerPos = MGRIF_MISYS_COMPOUNDPOS(_compound);
 };
-
 
 _officer =	[
       			'officer',
@@ -93,91 +62,29 @@ _officer =	[
 
 deletedGroups = [];
 
+//calculate out of zone reinforcement points defaults
+
+_averagePosition = [0,0,0];
+{_averagePosition vectorAdd (_x#1)} forEach _compounds;
+_averagePosition =  _averagePosition apply {_x / count _compounds};
+_offset = MGRIF_MISYS_AO_SIZE*1.5 / sqrt 2;
+
+_reinforcementPointsDefault = [
+	_averagePosition vectorAdd [_offset,_offset,0],
+	_averagePosition vectorAdd [-_offset,_offset,0],
+	_averagePosition vectorAdd [-_offset,-_offset,0],
+	_averagePosition vectorAdd [_offset,-_offset,0]
+];
 
 addedGroups = [];
 
 while {alive _officer} do {
 	// Check for empty groups and refund points
-	//TODO: Maybe decouple reinforcement calculation?
-	{
-		_currentIndex = _forEachIndex;
-		{
-			_currentInfPoints = _x#0;
-			_currentVehPoints = _x#1;
-			_toDelete = [];
-			{
-				if(count units _x == 0) then {
-					//hint str ["Refunding Points",_x,_x getVariable "mgrif_misys_groupCost"];
-					_toDelete pushBack _forEachIndex;
-					_currentInfPoints = _currentInfPoints + ((_x getVariable "mgrif_misys_groupCost")#0);
-					_currentVehPoints = _currentVehPoints + ((_x getVariable "mgrif_misys_groupCost")#1);
-					deletedGroups pushBack["Refunding Points",_x,_x getVariable "mgrif_misys_groupCost"];
-				};
-				
-			} forEach ((_garrisonForces#_currentIndex)#_forEachIndex);
-			
-			_deleteOffset = 0;
-			_currentSubIndex = _forEachIndex;
-			{
-				//diag_log str ["Trying to delete",_deleteOffset,"Count",count ((_garrisonForces#_currentIndex)#_currentSubIndex)];
-				 ((_garrisonForces#_currentIndex)#_currentSubIndex) deleteAt (_x - _deleteOffset);
-				 
-				 _deleteOffset = _deleteOffset + 1;
-			} forEach _toDelete;
-			
-			_x set [0,_currentInfPoints];
-			_x set [1,_currentVehPoints];
-		} forEach _x;
-		
-	} forEach mgrif_var_misys_AOManagerPoints;
-	//refund end
-	
+	[_garrisonForces,mgrif_var_misys_AOManagerPoints] call mgrif_fnc_misys_AOManagerDefaultRefundPoints;
 	
 	//create Reinforcements
-	{
-		_currentIndex = _forEachIndex;
-		{
-			_currentInfPoints = _x#0;
-			_currentVehPoints = _x#1;
-			
-			((_garrisonForces#_currentIndex)#_forEachIndex);
-			_squadsize = 0;
-			if(_currentInfPoints >=4) then {
-				if (_currentInfPoints >=8) then {_squadsize = 8;} else {_squadSize = _currentInfPoints};
-				_eligibileCompounds = [];
-				{
-					_currentCompound = _x;
-					_nearbyPlayersCount = {(MGRIF_MISYS_COMPOUNDPOS(_currentCompound) distance _x) < 350} count allPlayers;
-					if(_nearbyPlayersCount==0) then {_eligibileCompounds pushBack _forEachIndex};
-				} forEach _compounds;
-				
-				if (count _eligibileCompounds > 0) then {
-					_compIndex = selectRandom _eligibileCompounds;
-					_compoundPos = MGRIF_MISYS_COMPOUNDPOS(_compounds#_compIndex);
-					p1 = _compoundPos;
-					_spawnPos = [_compoundPos,3,33,false,[]] call mgrif_fnc_misys_safePosCompound;
-					if(count _spawnPos <3) then {
-						_spawnPos pushBack 0;
-						_rgroup = [_squadSize,_spawnPos,_faction] call mgrif_fnc_misys_createInfantryGroup;
-						
-						MGRIF_MISYS_SQUADS(_garrisonForces) pushBack _rgroup;
-						addedGroups pushBack [_squadSize,"ADDED",_rgroup];
-						hint "Added group";
-					};
-
-					
-				};
-				
-			};
-			
-			_x set [0,_currentInfPoints-_squadsize];
-			_x set [1,_currentVehPoints];
-		} forEach _x;
-	} forEach mgrif_var_misys_AOManagerPoints;
-	
-	
-	
-
+	[_garrisonForces,mgrif_var_misys_AOManagerPoints,_reinforcementPointsDefault,_compounds,_faction] call mgrif_fnc_misys_AOManagerDefaultCreateReinforcements;
+		
 	if(_officer getVariable ["mgrif_var_misys_canCommunicate",true]) then {
 		
 		_availableTroops = MGRIF_MISYS_SQUADS(_garrisonForces) + MGRIF_MISYS_MOTORISEDARMED(_garrisonForces);

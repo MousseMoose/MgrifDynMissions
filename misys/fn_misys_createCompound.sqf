@@ -19,14 +19,15 @@ params [
 	["_compNames", []],
 	["_strength", 1],
 	["_radius", 33],
-	["_auxTypes",[]],
-	["_auxNames", []]
+	["_auxTypes",["Garrison","Motorpool"]],
+	["_auxSizes",["S15","S20"]],
+	["_auxNames", ["rand","rand"]]
 ];
 
 
 
 
-private ["_file","_compound","_compSizes","_provided"];
+private ["_file","_compound","_compSizes"];
 
 //Load mission data
 _file = getText(MGRIF_CONFIGROOT >> "CfgMisysCompounds" >> _size >> _name >> "file");
@@ -40,18 +41,13 @@ if((count _compNames) == 0) then {
 	{_compNames pushback "rand"} foreach _compSizes;
 };
 
+if((count _auxNames) == 0) then {
+	_auxNames = [];
+	{_auxNames pushback "rand"} foreach _auxSizes;
+};
 
-//DEPRECATED
-_provided = 
-[
-	[
-		[],	//local patrols
-		[], //AO Patrols
-		[] // Special Groups
-	],
-	[], //loot vehicles
-	[] //props
-];
+
+
 
 _garrisonForces = MGRIF_MISYS_GARRISONTEMPLATE;
 _vehicles = [];
@@ -78,13 +74,13 @@ _components = [];
 } forEach _compTypes;
 
 
-_auxTypes = ["Garrison","Motorpool"];
-_auxSizes = ["S15","S20"];
+
 _realSizes = _auxSizes apply {call compile  ((_x splitString "S")#0)};
 _auxNames = ["rand","rand"];
 _auxPositions = [];
 _auxillaries = [];
 _auxPosCount = 0;
+_toDelete = [];
 {
 	//TODO: verify auxPositions aren't default
 	_auxPosition = [_pos, _radius + 7, _radius + (_realSizes#_forEachIndex) + 7, (_realSizes#_forEachIndex) + 2, 0, 0.5, 0,[],[]] call mgrif_fnc_misys_findSafePosReal;
@@ -103,10 +99,13 @@ _auxPosCount = 0;
 		] call mgrif_fnc_misys_createCompoundComponent;
 		_auxillaries pushBack (_auxillary#1);
 		_auxPosCount = _auxPosCount+1;
+	} else {
+		_toDelete pushback _forEachIndex;
 	};
 
 } forEach _auxTypes;
-_auxTypes resize _auxPosCount;
+[_auxTypes,_toDelete] call mgrif_fnc_misys_deleteIndices;
+[_auxSizes,_toDelete] call mgrif_fnc_misys_deleteIndices;
 
 
 _customs = [];
@@ -254,7 +253,7 @@ MGRIF_MISYS_WATCHS(_garrisonForces) pushBack _watchGroup;
 MGRIF_MISYS_BUILDINGGUARDS(_garrisonForces) append _buildingGroups;
 
 
-[_compound,_groups,_garrisonForces]
+[_compound,_groups,_garrisonForces,_compTypes,_compSizes,_auxTypes,_auxSizes]
 
 
 

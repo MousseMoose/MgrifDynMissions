@@ -70,16 +70,8 @@ for "_i" from 1 to _compoundCount do {
 	_mrk setMarkerType "mil_dot";
 } forEach _patrolPoints;
 
-_allProvided = 
-[
-	[
-		[],	//local patrols
-		[], //AO Patrols
-		[] // Special Groups
-	],
-	[], //loot vehicles
-	[] //props
-];
+
+
 
 _allGarrisonForces = MGRIF_MISYS_GARRISONTEMPLATE;
 {
