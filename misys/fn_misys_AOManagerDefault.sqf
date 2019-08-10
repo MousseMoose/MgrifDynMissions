@@ -65,30 +65,35 @@ deletedGroups = [];
 //calculate out of zone reinforcement points defaults
 
 _averagePosition = [0,0,0];
-{_averagePosition vectorAdd (_x#1)} forEach _compounds;
+{_averagePosition = _averagePosition vectorAdd (_x#1)} forEach _compounds;
 _averagePosition =  _averagePosition apply {_x / count _compounds};
 _offset = MGRIF_MISYS_AO_SIZE*1.5 / sqrt 2;
 
-_reinforcementPointsDefault = [
+_reinforcementPointsDefaultLand = [
 	_averagePosition vectorAdd [_offset,_offset,0],
 	_averagePosition vectorAdd [-_offset,_offset,0],
 	_averagePosition vectorAdd [-_offset,-_offset,0],
 	_averagePosition vectorAdd [_offset,-_offset,0]
 ];
+_reinforcementPointsDefaultWater = [];
+_toDelete = [];
+ { if(surfaceIsWater _x) then {_toDelete pushBack _forEachIndex; _reinforcementPointsDefaultWater pushBack _x}} forEach _reinforcementPointsDefaultLand;
+[_reinforcementPointsDefaultLand,_toDelete] call mgrif_fnc_misys_deleteIndices;
+{_mrk = createMarker [str  _x, _x]; _mrk setMarkerType "mil_arrow";} forEach _reinforcementPointsDefaultLand;
+{_mrk = createMarker [str  _x, _x]; _mrk setMarkerType "mil_arrow2";} forEach _reinforcementPointsDefaultWater;
 
 addedGroups = [];
 
-while {alive _officer} do {
+while {true} do {
 	// Check for empty groups and refund points
 	[_garrisonForces,mgrif_var_misys_AOManagerPoints] call mgrif_fnc_misys_AOManagerDefaultRefundPoints;
 	
 	//create Reinforcements
-	[_garrisonForces,mgrif_var_misys_AOManagerPoints,_reinforcementPointsDefault,_compounds,_faction] call mgrif_fnc_misys_AOManagerDefaultCreateReinforcements;
+	[_garrisonForces,mgrif_var_misys_AOManagerPoints,_reinforcementPointsDefaultLand,_compounds,_faction] call mgrif_fnc_misys_AOManagerDefaultCreateReinforcements;
 		
 	if(_officer getVariable ["mgrif_var_misys_canCommunicate",true]) then {
 		
 		_availableTroops = MGRIF_MISYS_SQUADS(_garrisonForces) + MGRIF_MISYS_MOTORISEDARMED(_garrisonForces);
-		//p1 = _availableTroops;
 		
 		
 		//calculate known targets within AO

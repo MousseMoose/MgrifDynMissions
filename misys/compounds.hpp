@@ -62,6 +62,7 @@ class CfgMisysCompoundComponents: Mgrif_CompoundComponentConfig {
 	
 	class Garage:Mgrif_CompoundComponentType {
 		function = "mgrif_fnc_misys_componentGarage";
+		
 		class S5:Mgrif_CompoundComponentSize {
 			class Car:Mgrif_CompoundComponent {
 				file = "misys\components\s5GarageCar.sqf";

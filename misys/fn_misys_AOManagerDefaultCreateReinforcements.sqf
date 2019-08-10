@@ -11,7 +11,7 @@
 
 
 params [
-	["_garrisonForces",[]],
+	["_garrisonForces",[]], 
 	["_AOManagerPoints",[]],
 	["_defaultSpawnPoints",[]],
 	["_compounds",[]],
@@ -39,14 +39,17 @@ params [
 			if (count _eligibileCompounds > 0) then {
 				_compIndex = selectRandom _eligibileCompounds;
 				_compoundPos = MGRIF_MISYS_COMPOUNDPOS(_compounds#_compIndex);
-				p1 = _compoundPos;
 				_spawnPos = [_compoundPos,3,33,false,[]] call mgrif_fnc_misys_safePosCompound;
 				if(count _spawnPos <3) then {
 					_spawnPos pushBack 0;
 					_rgroup = [_squadSize,_spawnPos,_faction] call mgrif_fnc_misys_createInfantryGroup;
+					_rgroup setVariable ["mgrif_misys_groupCost",[_squadSize,0]];
+					_rgroup setVariable ["mgrif_misys_groupVehicle",vehicle leader _rgroup];
 					
 					MGRIF_MISYS_SQUADS(_garrisonForces) pushBack _rgroup;
 					addedGroups pushBack [_squadSize,_rgroup];
+				} else {
+					diag_log "Cannot spawn reinforcements due to space problems!";
 				};
 
 				

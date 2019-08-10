@@ -17,7 +17,7 @@
 		["MedicalGarbage_01_FirstAidKit_F",[-1.18945,1.68262,0],68.4661,1,0,[],"","",true,false], 
 		["MedicalGarbage_01_1x1_v2_F",[-1.62915,1.7002,0],0,1,0,[],"","",true,false], 
 		["BloodPool_01_Large_Old_F",[-0.893066,2.55518,0],0,1,0,[],"","",true,false], 
-		["Land_Stretcher_01_olive_F",[-0.960449,2.56445,4.76837e-007],270.096,1,0,[],"prop1","",true,false], 
+		["Land_Stretcher_01_olive_F",[-0.960449,2.56445,4.76837e-007],270.096,1,0,[],"","",true,false], 
 		//["Logic",[-0.860352,2.56445,0.491619],270.192,1,0,[],"","",true,false], 
 		["CargoNet_01_box_F",[-1.15063,-2.7168,0],360,1,0,[],"","",true,false], 
 		["Land_MedicalTent_01_white_generic_open_F",[-3.05908,-0.34082,0],358.181,1,0,[],"","",true,false], 

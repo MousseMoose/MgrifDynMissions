@@ -16,6 +16,8 @@ class misys {
 	class misys_createInfantryGroup {};
 	class misys_createVehicle {};
 	
+	class misys_wpStop {};
+	
 	class misys_occupyBuilding {};
 	
 	class misys_AOManagerDefault {};

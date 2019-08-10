@@ -15,7 +15,7 @@ params [
 				_toDelete pushBack _forEachIndex;
 				_currentInfPoints = _currentInfPoints + ((_x getVariable "mgrif_misys_groupCost")#0);
 				_currentVehPoints = _currentVehPoints + ((_x getVariable "mgrif_misys_groupCost")#1);
-				deletedGroups pushBack[_x,_x getVariable "mgrif_misys_groupCost"];
+				if(_currentInfPoints != 0) then {deletedGroups pushBack[_x,_x getVariable "mgrif_misys_groupCost"];};
 			};
 			
 		} forEach ((_garrisonForces#_currentIndex)#_forEachIndex);

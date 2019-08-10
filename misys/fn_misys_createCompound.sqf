@@ -118,15 +118,15 @@ _customs = [];
 	_customs pushback _compCustom;
 } forEach _compTypes;
 
-testtypes = [_compTypes,_compNames];
+//testtypes = [_compTypes,_compNames];
 
 {
 	_auxPosition = _auxPositions#_forEachIndex;
 	_auxCustom = [_pos, _dir, _auxPosition,_auxPosition getDir _pos, _faction, _strength, _auxillaries#_forEachIndex,_compTypes + _auxTypes,_compSizes + _auxSizes] call call compile getText (MGRIF_CONFIGROOT >> "CfgMisysCompoundAuxillaries" >> _x >> "function");
-	/*if (isNil "_auxCustom") then {
+	if (isNil "_auxCustom") then {
 		CopyToClipboard str [_pos, _dir, _auxPosition,_auxPosition getDir _pos, _faction, _strength, _auxillaries#_forEachIndex,_compTypes + _auxTypes,_compSizes + _auxSizes];
 		hint getText (MGRIF_CONFIGROOT >> "CfgMisysCompoundAuxillaries" >> _x >> "function");
-	};*/
+	};
 	_customs pushback _auxCustom;
 } forEach _auxTypes;
 
